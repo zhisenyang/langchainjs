@@ -237,6 +237,14 @@ async function updateGitIgnore(
   );
 }
 
+async function updatePackageJsonModuleType(moduleType: "module" | "commonjs"): Promise<void> {
+  const packageJson = JSON.parse(
+    await fs.promises.readFile(`package.json`, "utf8")
+  );
+  packageJson.type = moduleType;
+  await fs.promises.writeFile(`package.json`, JSON.stringify(packageJson, null, 2));
+}
+
 async function updatePackageJson(config: LangChainConfig): Promise<void> {
   const packageJson = JSON.parse(
     await fs.promises.readFile(`package.json`, "utf8")
@@ -732,22 +740,45 @@ export async function buildWithTSup() {
   }
 
   if (shouldCreateEntrypoints) {
-    await Promise.all([
-      asyncSpawn("tsc", ["--outDir", "dist/"]),
-      asyncSpawn("tsc", ["--outDir", "dist-cjs/", "-p", "tsconfig.cjs.json"]),
-    ]);
-    await moveAndRename({
-      source: config.cjsSource,
-      dest: config.cjsDestination,
-      abs: config.abs,
+    await updatePackageJsonModuleType("module");
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
     });
-    // move CJS to dist
+
+    await asyncSpawn("tsc", ["--outDir", "dist/"]);
+
+    if (fs.existsSync("tsconfig.cjs.json")) {
+      try {
+        await updatePackageJsonModuleType("commonjs");
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        });
+
+        await asyncSpawn("tsc", [
+          "--outDir",
+          "dist-cjs/",
+          "-p",
+          "tsconfig.cjs.json",
+        ]);
+
+        await moveAndRename({
+          source: config.cjsSource,
+          dest: config.cjsDestination,
+          abs: config.abs,
+        });
+
+        await fsRmRfSafe("dist-cjs").catch((e) => {
+          console.error("Error removing dist-cjs");
+          throw e;
+        });
+      } finally {
+        // revert back to module so we're not leaving the WD in a dirty state
+        await updatePackageJsonModuleType("module");
+      }
+    }
+
     await Promise.all([
       updatePackageJson(config),
-      fsRmRfSafe("dist-cjs").catch((e) => {
-        console.error("Error removing dist-cjs");
-        throw e;
-      }),
       fsRmRfSafe("dist/tests").catch((e) => {
         console.error("Error removing dist/tests");
         throw e;
