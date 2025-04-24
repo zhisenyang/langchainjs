@@ -479,6 +479,9 @@ test("Test ChatBedrockConverse can respond to tool invocations with thinking ena
       thinking: { type: "enabled", budget_tokens: 2000 },
     },
   });
+  const schema = z.object({
+    location: z.string().describe("Location to get the weather for"),
+  });
   const tools = [
     tool(
       ({ location }: { location: string }) =>
@@ -487,9 +490,7 @@ test("Test ChatBedrockConverse can respond to tool invocations with thinking ena
         name: "weather_poet",
         description:
           "Gets the current weather conditions for the location, written in a poetic manner.",
-        schema: z.object({
-          location: z.string().describe("Location to get the weather for"),
-        }),
+        schema,
       }
     ),
   ];
@@ -516,7 +517,9 @@ test("Test ChatBedrockConverse can respond to tool invocations with thinking ena
   messages.push(
     new ToolMessage({
       tool_call_id: result.tool_calls![0].id!,
-      content: await tools[0].invoke(result.tool_calls![0]),
+      content: await tools[0].invoke(
+        result.tool_calls![0]!.args as z.infer<typeof schema>
+      ),
     })
   );
 
