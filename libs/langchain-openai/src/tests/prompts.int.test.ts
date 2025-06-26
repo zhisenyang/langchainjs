@@ -1,9 +1,12 @@
 import OpenAI from "openai";
+import { net } from "@langchain/net-mocks";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 import { convertPromptToOpenAI } from "../utils/prompts.js";
 
 test("Convert hub prompt to OpenAI payload and invoke", async () => {
+  await net.vcr();
+
   const prompt = ChatPromptTemplate.fromMessages([
     ["system", "You are a world class comedian"],
     ["human", "Tell me a joke about {topic}"],

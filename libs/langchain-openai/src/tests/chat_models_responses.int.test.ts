@@ -1,5 +1,6 @@
 /* eslint-disable no-process-env */
-import { test, expect } from "vitest";
+import { net } from "@langchain/net-mocks";
+import { test, expect, describe } from "vitest";
 import {
   AIMessage,
   AIMessageChunk,
@@ -77,6 +78,8 @@ function assertResponse(message: BaseMessage | BaseMessageChunk | undefined) {
 }
 
 test("Test with built-in web search", async () => {
+  await net.vcr();
+
   const llm = new ChatOpenAI({ modelName: "gpt-4o-mini" });
 
   // Test invoking with web search
@@ -125,6 +128,8 @@ test("Test with built-in web search", async () => {
 test.each(["stream", "invoke"])(
   "Test function calling, %s",
   async (invocationType: string) => {
+    await net.vcr();
+
     const multiply = tool((args) => args.x * args.y, {
       name: "multiply",
       description: "Multiply two numbers",
@@ -178,6 +183,8 @@ test.each(["stream", "invoke"])(
 );
 
 test("Test structured output", async () => {
+  await net.vcr();
+
   const schema = z.object({ response: z.string() });
   const response_format = {
     type: "json_schema" as const,
@@ -209,6 +216,8 @@ test("Test structured output", async () => {
 });
 
 test("Test function calling and structured output", async () => {
+  await net.vcr();
+
   const multiply = tool((args) => args.x * args.y, {
     name: "multiply",
     description: "Multiply two numbers",
@@ -258,6 +267,8 @@ test("Test function calling and structured output", async () => {
 });
 
 test("Test tool binding with optional zod fields", async () => {
+  await net.vcr();
+
   const llm = new ChatOpenAI({ modelName: "gpt-4o-mini" });
   const multiply = tool((args) => args.x * args.y, {
     name: "multiply",
@@ -276,6 +287,8 @@ test("Test tool binding with optional zod fields", async () => {
 });
 
 test("Test reasoning", async () => {
+  await net.vcr();
+
   const llm = new ChatOpenAI({ modelName: "o3-mini", useResponsesApi: true });
   const response = await llm.invoke("Hello", { reasoning_effort: "low" });
   expect(response).toBeInstanceOf(AIMessage);
@@ -296,6 +309,8 @@ test("Test reasoning", async () => {
 });
 
 test("Test stateful API", async () => {
+  await net.vcr();
+
   const llm = new ChatOpenAI({
     modelName: "gpt-4o-mini",
     useResponsesApi: true,
@@ -319,6 +334,8 @@ test("Test stateful API", async () => {
 });
 
 test("Test file search", async () => {
+  await net.vcr();
+
   const llm = new ChatOpenAI({ modelName: "gpt-4o-mini" });
   const tool = {
     type: "file_search",
@@ -338,6 +355,8 @@ test("Test file search", async () => {
 });
 
 test("Test Code Interpreter", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o4-mini",
     useResponsesApi: true,
@@ -392,6 +411,8 @@ test("Test Code Interpreter", async () => {
 });
 
 test("Test Remote MCP", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o4-mini",
     useResponsesApi: true,
@@ -461,6 +482,8 @@ describe("Test image generation", () => {
   }
 
   test("with streaming", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4.1",
       useResponsesApi: true,
@@ -486,6 +509,8 @@ describe("Test image generation", () => {
   });
 
   test("multi-turn", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4.1",
       useResponsesApi: true,
@@ -517,6 +542,8 @@ describe("Test image generation", () => {
 });
 
 test("Test computer call", async () => {
+  await net.vcr();
+
   const fs = await import("node:fs/promises");
   const url = await import("node:url");
 
@@ -687,6 +714,7 @@ describe("reasoning summaries", () => {
   test.each(["stream", "invoke"])(
     "normal responses API usage (Zero Data Retention disabled), %s",
     async (requestType) => {
+      await net.vcr();
       await testReasoningSummaries(requestType as "stream" | "invoke");
     }
   );
@@ -694,6 +722,7 @@ describe("reasoning summaries", () => {
   test.each(["stream", "invoke"])(
     "Zero Data Retention disabled, previous output metadata missing, %s",
     async (requestType) => {
+      await net.vcr();
       await testReasoningSummaries(
         requestType as "stream" | "invoke",
         {},
@@ -705,6 +734,7 @@ describe("reasoning summaries", () => {
   test.each(["stream", "invoke"])(
     "Zero Data Retention enabled, %s",
     async (requestType) => {
+      await net.vcr();
       await testReasoningSummaries(requestType as "stream" | "invoke", {
         zdrEnabled: true,
       });
@@ -714,6 +744,7 @@ describe("reasoning summaries", () => {
   test.each(["stream", "invoke"])(
     "Zero Data Retention enabled, and previous output metadata missing, %s",
     async (requestType) => {
+      await net.vcr();
       await testReasoningSummaries(
         requestType as "stream" | "invoke",
         { zdrEnabled: true },
@@ -723,6 +754,7 @@ describe("reasoning summaries", () => {
   );
 
   test("it can handle passing back reasoning outputs alongside computer calls", async () => {
+    await net.vcr();
     const model = new ChatOpenAI({
       model: "computer-use-preview",
       useResponsesApi: true,

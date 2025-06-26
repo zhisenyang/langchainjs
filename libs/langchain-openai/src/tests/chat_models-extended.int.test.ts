@@ -1,12 +1,15 @@
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { test, expect, vi } from "vitest";
+import { net } from "@langchain/net-mocks";
 import { AIMessage, HumanMessage, ToolMessage } from "@langchain/core/messages";
 import { concat } from "@langchain/core/utils/stream";
 import { InMemoryCache } from "@langchain/core/caches";
 import { ChatOpenAI } from "../chat_models.js";
 
 test("Test ChatOpenAI JSON mode", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 128,
@@ -23,6 +26,8 @@ test("Test ChatOpenAI JSON mode", async () => {
 });
 
 test("Test ChatOpenAI seed", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 128,
@@ -57,6 +62,8 @@ test("Test ChatOpenAI seed", async () => {
 });
 
 test("Test ChatOpenAI tool calling", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 128,
@@ -102,6 +109,8 @@ test("Test ChatOpenAI tool calling", async () => {
 });
 
 test("Test ChatOpenAI streaming logprobs", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     maxTokens: 50,
     modelName: "gpt-3.5-turbo",
@@ -114,6 +123,8 @@ test("Test ChatOpenAI streaming logprobs", async () => {
 });
 
 test("Test ChatOpenAI with search preview model", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     maxTokens: 50,
     modelName: "gpt-4o-search-preview",
@@ -123,6 +134,8 @@ test("Test ChatOpenAI with search preview model", async () => {
 });
 
 test("Test ChatOpenAI tool calling with ToolMessages", async () => {
+  await net.vcr();
+
   function getCurrentWeather(location: string) {
     if (location.toLowerCase().includes("tokyo")) {
       return JSON.stringify({ location, temperature: "10", unit: "celsius" });
@@ -202,6 +215,8 @@ test("Test ChatOpenAI tool calling with ToolMessages", async () => {
 });
 
 test("Test ChatOpenAI tool calling with streaming", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 256,
@@ -250,6 +265,8 @@ test("Test ChatOpenAI tool calling with streaming", async () => {
 });
 
 test("ChatOpenAI in JSON mode can cache generations", async () => {
+  await net.vcr();
+
   const memoryCache = new InMemoryCache();
   const lookupSpy = vi.spyOn(memoryCache, "lookup");
   const updateSpy = vi.spyOn(memoryCache, "update");
@@ -281,6 +298,8 @@ test("ChatOpenAI in JSON mode can cache generations", async () => {
 });
 
 test("Few shotting with tool calls", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     temperature: 1,
@@ -335,6 +354,8 @@ test("Few shotting with tool calls", async () => {
 });
 
 test("Test ChatOpenAI with raw response", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 128,
@@ -346,6 +367,8 @@ test("Test ChatOpenAI with raw response", async () => {
 });
 
 test("Test ChatOpenAI with raw response", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo-1106",
     maxTokens: 128,
@@ -622,6 +645,8 @@ LangChain has many different types of output parsers. This is a list of output p
 The current date is ${new Date().toISOString()}`;
 
 test.skip("system prompt caching", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "gpt-4o-mini-2024-07-18",
   });
@@ -655,6 +680,8 @@ test.skip("system prompt caching", async () => {
 });
 
 test("predicted output", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "gpt-4o-mini",
   });

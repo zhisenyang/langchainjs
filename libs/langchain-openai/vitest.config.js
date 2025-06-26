@@ -46,7 +46,7 @@ export default defineConfig((env) => {
         ...common.test,
         globals: false,
         testTimeout: 100_000,
-        exclude: configDefaults.exclude,
+        exclude: ["**/*.standard.int.test.ts", ...configDefaults.exclude],
         include: ["**/*.int.test.ts"],
         name: "int",
         environment: "node",

@@ -1,4 +1,5 @@
 import { test } from "vitest";
+import { net } from "@langchain/net-mocks";
 import { HumanMessage } from "@langchain/core/messages";
 import * as fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -6,6 +7,8 @@ import * as path from "node:path";
 import { ChatOpenAI } from "../chat_models.js";
 
 test("Test ChatOpenAI with a file", async () => {
+  await net.vcr();
+
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const imageData = await fs.readFile(path.join(__dirname, "/data/hotdog.jpg"));
@@ -34,6 +37,8 @@ test("Test ChatOpenAI with a file", async () => {
 });
 
 test("Test ChatOpenAI with a URL", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-4o",
     maxTokens: 1024,

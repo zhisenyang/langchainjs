@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { net } from "@langchain/net-mocks";
 import { toJsonSchema } from "@langchain/core/utils/json_schema";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { AIMessage, AIMessageChunk } from "@langchain/core/messages";
@@ -7,6 +8,8 @@ import { concat } from "@langchain/core/utils/stream";
 import { ChatOpenAI } from "../chat_models.js";
 
 test("withStructuredOutput zod schema function calling", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -37,6 +40,8 @@ test("withStructuredOutput zod schema function calling", async () => {
 });
 
 test("withStructuredOutput with o1", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o1",
   });
@@ -66,6 +71,8 @@ test("withStructuredOutput with o1", async () => {
 });
 
 test("withStructuredOutput zod schema streaming", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -101,6 +108,8 @@ test("withStructuredOutput zod schema streaming", async () => {
 });
 
 test("withStructuredOutput zod schema JSON mode", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -140,6 +149,8 @@ Respond with a JSON object containing three keys:
 });
 
 test("withStructuredOutput JSON schema function calling", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -168,6 +179,8 @@ test("withStructuredOutput JSON schema function calling", async () => {
 });
 
 test("withStructuredOutput OpenAI function definition function calling", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -196,6 +209,8 @@ test("withStructuredOutput OpenAI function definition function calling", async (
 });
 
 test("withStructuredOutput JSON schema JSON mode", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -235,6 +250,8 @@ Respond with a JSON object containing three keys:
 });
 
 test("withStructuredOutput JSON schema", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -276,6 +293,8 @@ Respond with a JSON object containing three keys:
 });
 
 test("withStructuredOutput includeRaw true", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     temperature: 0,
     modelName: "gpt-4o-mini",
@@ -337,6 +356,8 @@ test("withStructuredOutput includeRaw true", async () => {
 });
 
 test("parallelToolCalls param", async () => {
+  await net.vcr();
+
   const calculatorSchema = z
     .object({
       operation: z.enum(["add", "subtract", "multiply", "divide"]),
@@ -383,6 +404,8 @@ test("parallelToolCalls param", async () => {
 });
 
 test("Passing strict true forces the model to conform to the schema", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "gpt-4o",
     temperature: 0,
@@ -427,6 +450,8 @@ describe("response_format: json_schema", () => {
   });
 
   it("can invoke", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withConfig({
@@ -452,6 +477,8 @@ describe("response_format: json_schema", () => {
   });
 
   it("can stream", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withConfig({
@@ -484,6 +511,8 @@ describe("response_format: json_schema", () => {
   });
 
   it("can invoke with a zod schema passed in", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withConfig({
@@ -509,6 +538,8 @@ describe("response_format: json_schema", () => {
   });
 
   it("can stream with a zod schema passed in", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withConfig({
@@ -541,6 +572,8 @@ describe("response_format: json_schema", () => {
   });
 
   it("can be invoked with WSO", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withStructuredOutput(weatherSchema, {
@@ -560,6 +593,8 @@ describe("response_format: json_schema", () => {
 
   // Flaky test
   it.skip("can be streamed with WSO", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-2024-08-06",
     }).withStructuredOutput(weatherSchema, {

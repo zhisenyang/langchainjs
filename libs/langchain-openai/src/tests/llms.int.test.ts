@@ -1,5 +1,5 @@
 /* eslint-disable no-process-env */
-
+import { net } from "@langchain/net-mocks";
 import { test, expect } from "vitest";
 import { LLMResult } from "@langchain/core/outputs";
 import { StringPromptValue } from "@langchain/core/prompt_values";
@@ -11,6 +11,7 @@ import { OpenAI } from "../llms.js";
 const originalBackground = process.env.LANGCHAIN_CALLBACKS_BACKGROUND;
 
 test("Test OpenAI", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -22,6 +23,7 @@ test("Test OpenAI", async () => {
 });
 
 test("Test OpenAI with stop", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -33,6 +35,7 @@ test("Test OpenAI with stop", async () => {
 });
 
 test("Test OpenAI with stop in object", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -44,6 +47,7 @@ test("Test OpenAI with stop in object", async () => {
 });
 
 test("Test OpenAI with timeout in call options", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     maxRetries: 0,
@@ -57,6 +61,7 @@ test("Test OpenAI with timeout in call options", async () => {
 }, 5000);
 
 test("Test OpenAI with timeout in call options and node adapter", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     maxRetries: 0,
@@ -70,6 +75,7 @@ test("Test OpenAI with timeout in call options and node adapter", async () => {
 }, 5000);
 
 test("Test OpenAI with signal in call options", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -87,6 +93,7 @@ test("Test OpenAI with signal in call options", async () => {
 }, 5000);
 
 test("Test OpenAI with signal in call options and node adapter", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -104,6 +111,7 @@ test("Test OpenAI with signal in call options and node adapter", async () => {
 }, 5000);
 
 test("Test OpenAI with concurrency == 1", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -119,6 +127,7 @@ test("Test OpenAI with concurrency == 1", async () => {
 });
 
 test("Test OpenAI with maxTokens -1", async () => {
+  await net.vcr();
   const model = new OpenAI({
     maxTokens: -1,
     modelName: "gpt-3.5-turbo-instruct",
@@ -130,6 +139,7 @@ test("Test OpenAI with maxTokens -1", async () => {
 });
 
 test("Test OpenAI with instruct model returns OpenAI", async () => {
+  await net.vcr();
   const model = new OpenAI({ modelName: "gpt-3.5-turbo-instruct" });
   expect(model).toBeInstanceOf(OpenAI);
   const res = await model.invoke("Print hello world");
@@ -138,6 +148,7 @@ test("Test OpenAI with instruct model returns OpenAI", async () => {
 });
 
 test("Test OpenAI with versioned instruct model returns OpenAI", async () => {
+  await net.vcr();
   const model = new OpenAI({ modelName: "gpt-3.5-turbo-instruct-0914" });
   expect(model).toBeInstanceOf(OpenAI);
   const res = await model.invoke("Print hello world");
@@ -146,6 +157,8 @@ test("Test OpenAI with versioned instruct model returns OpenAI", async () => {
 });
 
 test("Test ChatOpenAI tokenUsage", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -180,6 +193,8 @@ test("Test ChatOpenAI tokenUsage", async () => {
 });
 
 test("Test OpenAI in streaming mode", async () => {
+  await net.vcr();
+
   let nrNewTokens = 0;
   let streamedCompletion = "";
 
@@ -202,6 +217,8 @@ test("Test OpenAI in streaming mode", async () => {
 });
 
 test("Test OpenAI in streaming mode with multiple prompts", async () => {
+  await net.vcr();
+
   let nrNewTokens = 0;
   const completions = [
     ["", ""],
@@ -234,6 +251,8 @@ test("Test OpenAI in streaming mode with multiple prompts", async () => {
 });
 
 test("Test OpenAIChat in streaming mode with multiple prompts", async () => {
+  await net.vcr();
+
   let nrNewTokens = 0;
   const completions = [[""], [""]];
 
@@ -263,6 +282,8 @@ test("Test OpenAIChat in streaming mode with multiple prompts", async () => {
 });
 
 test("Test OpenAI prompt value", async () => {
+  await net.vcr();
+
   const model = new OpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -283,6 +304,8 @@ test("Test OpenAI prompt value", async () => {
 });
 
 test("Test OpenAI stream method", async () => {
+  await net.vcr();
+
   const model = new OpenAI({
     maxTokens: 50,
     modelName: "gpt-3.5-turbo-instruct",
@@ -296,6 +319,8 @@ test("Test OpenAI stream method", async () => {
 });
 
 test("Test OpenAI stream method with abort", async () => {
+  await net.vcr();
+
   await expect(async () => {
     const model = new OpenAI({
       maxTokens: 250,
@@ -317,6 +342,8 @@ test("Test OpenAI stream method with abort", async () => {
 });
 
 test("Test OpenAI stream method with early break", async () => {
+  await net.vcr();
+
   const model = new OpenAI({
     maxTokens: 50,
     modelName: "gpt-3.5-turbo-instruct",

@@ -1,6 +1,7 @@
 /* eslint-disable no-process-env */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { test, expect, vi } from "vitest";
+import { test, expect, describe, vi } from "vitest";
+import { net } from "@langchain/net-mocks";
 import {
   AIMessageChunk,
   BaseMessage,
@@ -31,6 +32,8 @@ import { ChatOpenAI } from "../chat_models.js";
 const originalBackground = process.env.LANGCHAIN_CALLBACKS_BACKGROUND;
 
 test("Test ChatOpenAI Generate", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     maxTokens: 10,
@@ -50,6 +53,8 @@ test("Test ChatOpenAI Generate", async () => {
 });
 
 test("Test ChatOpenAI invoke fails with proper error", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     model: "gpt-4o-mini",
     maxTokens: 10,
@@ -68,6 +73,8 @@ test("Test ChatOpenAI invoke fails with proper error", async () => {
 });
 
 test("Test ChatOpenAI invoke to unknown model fails with proper error", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     model: "badbadbad",
     maxTokens: 10,
@@ -85,6 +92,8 @@ test("Test ChatOpenAI invoke to unknown model fails with proper error", async ()
 });
 
 test("Test ChatOpenAI Generate throws when one of the calls fails", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     maxTokens: 10,
@@ -99,6 +108,8 @@ test("Test ChatOpenAI Generate throws when one of the calls fails", async () => 
 });
 
 test("Test ChatOpenAI tokenUsage", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -131,6 +142,8 @@ test("Test ChatOpenAI tokenUsage", async () => {
 });
 
 test("Test ChatOpenAI tokenUsage with a batch", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -165,6 +178,8 @@ test("Test ChatOpenAI tokenUsage with a batch", async () => {
 });
 
 test("Test ChatOpenAI in streaming mode", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -200,6 +215,8 @@ test("Test ChatOpenAI in streaming mode", async () => {
 }, 10000);
 
 test("Test ChatOpenAI in streaming mode with n > 1 and multiple prompts", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -242,6 +259,8 @@ test("Test ChatOpenAI in streaming mode with n > 1 and multiple prompts", async 
 }, 10000);
 
 test("Test ChatOpenAI prompt value", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({
     modelName: "gpt-3.5-turbo",
     maxTokens: 10,
@@ -262,6 +281,8 @@ test("Test ChatOpenAI prompt value", async () => {
 });
 
 test("OpenAI Chat, docs, prompt templates", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({ temperature: 0, maxTokens: 10 });
 
   const systemPrompt = PromptTemplate.fromTemplate(
@@ -287,6 +308,8 @@ test("OpenAI Chat, docs, prompt templates", async () => {
 }, 5000);
 
 test("Test OpenAI with stop", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 5 });
   // @eslint-disable-next-line/@typescript-eslint/ban-ts-comment
   // @ts-expect-error unused var
@@ -297,6 +320,8 @@ test("Test OpenAI with stop", async () => {
 });
 
 test("Test OpenAI with stop in object", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 5 });
   // @eslint-disable-next-line/@typescript-eslint/ban-ts-comment
   // @ts-expect-error unused var
@@ -307,6 +332,8 @@ test("Test OpenAI with stop in object", async () => {
 });
 
 test("Test OpenAI with timeout in call options", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 5, maxRetries: 0 });
   await expect(() =>
     model.invoke([new HumanMessage("Print hello world")], {
@@ -316,6 +343,8 @@ test("Test OpenAI with timeout in call options", async () => {
 }, 5000);
 
 test("Test OpenAI with timeout in call options and node adapter", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 5, maxRetries: 0 });
   await expect(() =>
     model.invoke([new HumanMessage("Print hello world")], {
@@ -325,6 +354,8 @@ test("Test OpenAI with timeout in call options and node adapter", async () => {
 }, 5000);
 
 test("Test OpenAI with signal in call options", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 5 });
   const controller = new AbortController();
   await expect(() => {
@@ -339,6 +370,8 @@ test("Test OpenAI with signal in call options", async () => {
 }, 5000);
 
 test("Test OpenAI with signal in call options and node adapter", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     maxTokens: 5,
     modelName: "gpt-3.5-turbo-instruct",
@@ -390,6 +423,8 @@ function createSampleMessages(): BaseMessage[] {
 }
 
 test("getNumTokensFromMessages gpt-3.5-turbo-0301 model for sample input", async () => {
+  await net.vcr();
+
   const messages: BaseMessage[] = createSampleMessages();
 
   const chat = new ChatOpenAI({
@@ -403,6 +438,8 @@ test("getNumTokensFromMessages gpt-3.5-turbo-0301 model for sample input", async
 });
 
 test("getNumTokensFromMessages gpt-4-0314 model for sample input", async () => {
+  await net.vcr();
+
   const messages: BaseMessage[] = createSampleMessages();
 
   const chat = new ChatOpenAI({
@@ -416,6 +453,8 @@ test("getNumTokensFromMessages gpt-4-0314 model for sample input", async () => {
 });
 
 test("Test OpenAI with specific roles in ChatMessage", async () => {
+  await net.vcr();
+
   const chat = new ChatOpenAI({ modelName: "gpt-3.5-turbo", maxTokens: 10 });
   const system_message = new ChatMessage(
     "You are to chat with a user.",
@@ -429,6 +468,8 @@ test("Test OpenAI with specific roles in ChatMessage", async () => {
 });
 
 test("Test ChatOpenAI stream method", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 50, modelName: "gpt-3.5-turbo" });
   const stream = await model.stream("Print hello world.");
   const chunks = [];
@@ -440,6 +481,8 @@ test("Test ChatOpenAI stream method", async () => {
 });
 
 test("Test ChatOpenAI stream method with abort", async () => {
+  await net.vcr();
+
   await expect(async () => {
     const model = new ChatOpenAI({
       maxTokens: 100,
@@ -460,6 +503,8 @@ test("Test ChatOpenAI stream method with abort", async () => {
 });
 
 test("Test ChatOpenAI stream method with early break", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({ maxTokens: 50, modelName: "gpt-3.5-turbo" });
   const stream = await model.stream(
     "How is your day going? Be extremely verbose."
@@ -477,6 +522,8 @@ test("Test ChatOpenAI stream method with early break", async () => {
 });
 
 test("Test ChatOpenAI stream method, timeout error thrown from SDK", async () => {
+  await net.vcr();
+
   await expect(async () => {
     const model = new ChatOpenAI({
       maxTokens: 50,
@@ -496,6 +543,8 @@ test("Test ChatOpenAI stream method, timeout error thrown from SDK", async () =>
 });
 
 test("Function calling with streaming", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -568,6 +617,8 @@ test("Function calling with streaming", async () => {
 });
 
 test("ChatOpenAI can cache generations", async () => {
+  await net.vcr();
+
   const memoryCache = new InMemoryCache();
   const lookupSpy = vi.spyOn(memoryCache, "lookup");
   const updateSpy = vi.spyOn(memoryCache, "update");
@@ -595,6 +646,8 @@ test("ChatOpenAI can cache generations", async () => {
 });
 
 test("ChatOpenAI can write and read cached generations", async () => {
+  await net.vcr();
+
   const memoryCache = new InMemoryCache();
   const lookupSpy = vi.spyOn(memoryCache, "lookup");
   const updateSpy = vi.spyOn(memoryCache, "update");
@@ -633,6 +686,8 @@ test("ChatOpenAI can write and read cached generations", async () => {
 });
 
 test("ChatOpenAI should not reuse cache if function call args have changed", async () => {
+  await net.vcr();
+
   const memoryCache = new InMemoryCache();
   const lookupSpy = vi.spyOn(memoryCache, "lookup");
   const updateSpy = vi.spyOn(memoryCache, "update");
@@ -720,6 +775,8 @@ test("ChatOpenAI should not reuse cache if function call args have changed", asy
 });
 
 test("Test ChatOpenAI token usage reporting for streaming function calls", async () => {
+  await net.vcr();
+
   const humanMessage = "What a beautiful day!";
   const extractionFunctionSchema = {
     name: "extractor",
@@ -801,6 +858,8 @@ Non-streaming: ${JSON.stringify(nonStreamingResult || {})}`);
 });
 
 test("Test ChatOpenAI token usage reporting for streaming calls", async () => {
+  await net.vcr();
+
   // Running LangChain callbacks in the background will sometimes cause the callbackManager to execute
   // after the test/llm call has already finished & returned. Set that environment variable to false
   // to prevent that from happening.
@@ -882,6 +941,8 @@ test("Test ChatOpenAI token usage reporting for streaming calls", async () => {
 });
 
 test("Finish reason is 'stop'", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI();
   const response = await model.stream("Hello, how are you?");
   let finalResult: AIMessageChunk | undefined;
@@ -897,6 +958,8 @@ test("Finish reason is 'stop'", async () => {
 });
 
 test("Streaming tokens can be found in usage_metadata field", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI();
   const response = await model.stream("Hello, how are you?");
   let finalResult: AIMessageChunk | undefined;
@@ -918,6 +981,8 @@ test("Streaming tokens can be found in usage_metadata field", async () => {
 });
 
 test("streaming: true tokens can be found in usage_metadata field", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     streaming: true,
   });
@@ -937,6 +1002,8 @@ test("streaming: true tokens can be found in usage_metadata field", async () => 
 });
 
 test("streaming: streamUsage will not override stream_options", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     streaming: true,
   });
@@ -951,6 +1018,8 @@ test("streaming: streamUsage will not override stream_options", async () => {
 });
 
 test("streaming: streamUsage default is true", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI();
   const response = await model.invoke("Hello, how are you?");
   // console.log({
@@ -964,6 +1033,8 @@ test("streaming: streamUsage default is true", async () => {
 });
 
 test("populates ID field on AIMessage", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI();
   const response = await model.invoke("Hell");
   // console.log({
@@ -990,6 +1061,8 @@ test("populates ID field on AIMessage", async () => {
 
 describe("Audio output", () => {
   test("Audio output", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       maxRetries: 0,
       model: "gpt-4o-audio-preview",
@@ -1015,6 +1088,8 @@ describe("Audio output", () => {
   });
 
   test("Audio output can stream", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       maxRetries: 0,
       model: "gpt-4o-audio-preview",
@@ -1053,6 +1128,8 @@ describe("Audio output", () => {
   });
 
   test("Can bind audio output args", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       maxRetries: 0,
       model: "gpt-4o-audio-preview",
@@ -1079,6 +1156,8 @@ describe("Audio output", () => {
   });
 
   test("Audio output in chat history", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       model: "gpt-4o-audio-preview",
       temperature: 0,
@@ -1121,6 +1200,8 @@ describe("Audio output", () => {
   });
 
   test("Users can pass audio as inputs", async () => {
+    await net.vcr();
+
     const model = new ChatOpenAI({
       maxRetries: 0,
       model: "gpt-4o-audio-preview",
@@ -1162,6 +1243,8 @@ describe("Audio output", () => {
 });
 
 test("Can stream o1-mini requests", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o1-mini",
   });
@@ -1189,6 +1272,8 @@ test("Can stream o1-mini requests", async () => {
 });
 
 test("Can stream o1 requests", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o1",
   });
@@ -1216,6 +1301,8 @@ test("Can stream o1 requests", async () => {
 });
 
 test("Allows developer messages with o1", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o1",
     reasoningEffort: "low",
@@ -1234,6 +1321,8 @@ test("Allows developer messages with o1", async () => {
 });
 
 test("Works with maxCompletionTokens with o3", async () => {
+  await net.vcr();
+
   const model = new ChatOpenAI({
     model: "o3-mini",
     reasoningEffort: "low",
@@ -1254,6 +1343,8 @@ test("Works with maxCompletionTokens with o3", async () => {
 });
 
 test.skip("Allow overriding", async () => {
+  await net.vcr();
+
   class ChatDeepSeek extends ChatOpenAI {
     protected override _convertOpenAIDeltaToBaseMessageChunk(
       delta: Record<string, any>,

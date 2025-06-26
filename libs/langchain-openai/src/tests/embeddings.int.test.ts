@@ -1,13 +1,16 @@
 import { test, expect } from "vitest";
+import { net } from "@langchain/net-mocks";
 import { OpenAIEmbeddings } from "../embeddings.js";
 
 test("Test OpenAIEmbeddings.embedQuery", async () => {
+  await net.vcr();
   const embeddings = new OpenAIEmbeddings();
   const res = await embeddings.embedQuery("Hello world");
   expect(typeof res[0]).toBe("number");
 });
 
 test("Test OpenAIEmbeddings.embedDocuments", async () => {
+  await net.vcr();
   const embeddings = new OpenAIEmbeddings();
   const res = await embeddings.embedDocuments(["Hello world", "Bye bye"]);
   expect(res).toHaveLength(2);
@@ -16,6 +19,7 @@ test("Test OpenAIEmbeddings.embedDocuments", async () => {
 });
 
 test("Test OpenAIEmbeddings concurrency", async () => {
+  await net.vcr();
   const embeddings = new OpenAIEmbeddings({
     batchSize: 1,
     maxConcurrency: 2,
@@ -35,6 +39,7 @@ test("Test OpenAIEmbeddings concurrency", async () => {
 });
 
 test("Test timeout error thrown from SDK", async () => {
+  await net.vcr();
   await expect(async () => {
     const model = new OpenAIEmbeddings({
       timeout: 1,
@@ -52,6 +57,7 @@ test("Test timeout error thrown from SDK", async () => {
 });
 
 test("Test OpenAI embeddings with an invalid org throws", async () => {
+  await net.vcr();
   await expect(async () => {
     const model = new OpenAIEmbeddings({
       configuration: {
@@ -70,6 +76,7 @@ test("Test OpenAI embeddings with an invalid org throws", async () => {
 });
 
 test("Test OpenAIEmbeddings.embedQuery with v3 and dimensions", async () => {
+  await net.vcr();
   const embeddings = new OpenAIEmbeddings({
     modelName: "text-embedding-3-small",
     dimensions: 127,
@@ -80,6 +87,7 @@ test("Test OpenAIEmbeddings.embedQuery with v3 and dimensions", async () => {
 });
 
 test("Test OpenAIEmbeddings.embedDocuments with v3 and dimensions", async () => {
+  await net.vcr();
   const embeddings = new OpenAIEmbeddings({
     modelName: "text-embedding-3-small",
     dimensions: 127,

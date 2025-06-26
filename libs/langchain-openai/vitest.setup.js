@@ -6,7 +6,7 @@ afterAll(awaitAllCallbacks);
 
 beforeAll(() =>
   net.setupVitest({
-    redactedKeys: ["x-api-key"],
+    redactedKeys: ["x-api-key", "authorization"],
   })
 );
 
