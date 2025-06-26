@@ -2,7 +2,7 @@ import { z } from "zod";
 import { toJsonSchema } from "@langchain/core/utils/json_schema";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { AIMessage, AIMessageChunk } from "@langchain/core/messages";
-import { test, expect, describe, it } from "@jest/globals";
+import { test, expect, describe, it } from "vitest";
 import { concat } from "@langchain/core/utils/stream";
 import { ChatOpenAI } from "../chat_models.js";
 

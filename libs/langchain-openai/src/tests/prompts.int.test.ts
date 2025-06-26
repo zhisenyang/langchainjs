@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-
+import { test } from "vitest";
 import { convertPromptToOpenAI } from "../utils/prompts.js";
 
 test("Convert hub prompt to OpenAI payload and invoke", async () => {
