@@ -1,4 +1,3 @@
-import { expect } from "@jest/globals";
 import {
   BaseChatModelCallOptions,
   LangSmithParams,
@@ -12,6 +11,7 @@ import {
   BaseChatModelsTestsFields,
   RecordStringAny,
 } from "../base.js";
+import { expect } from "../test-environment.js";
 
 const person = /* #__PURE__ */ z
   .object({
