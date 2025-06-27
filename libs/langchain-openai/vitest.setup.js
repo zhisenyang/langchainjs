@@ -6,7 +6,7 @@ afterAll(awaitAllCallbacks);
 
 beforeAll(() =>
   net.setupVitest({
-    redactedKeys: ["x-api-key", "authorization"],
+    includeKeys: ["x-stainless-package-version"],
   })
 );
 
