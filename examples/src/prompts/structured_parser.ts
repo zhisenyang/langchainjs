@@ -1,3 +1,37 @@
+/**
+ * 结构化输出解析器示例
+ * 
+ * 这个文件演示了如何使用 StructuredOutputParser 来确保 LLM 输出符合预定义的 JSON 结构。
+ * 主要功能：
+ * 
+ * 1. 结构化解析器配置：
+ *    - 定义输出字段的名称和描述
+ *    - 自动生成 JSON Schema
+ *    - 创建格式化指令
+ * 
+ * 2. 提示模板集成：
+ *    - 将格式化指令嵌入到提示模板中
+ *    - 使用部分变量预填充格式指令
+ *    - 确保 LLM 理解输出要求
+ * 
+ * 3. 结构化输出生成：
+ *    - LLM 根据 JSON Schema 生成结构化响应
+ *    - 包含 answer 和 source 字段
+ *    - 符合预定义的数据格式
+ * 
+ * 4. 输出解析和验证：
+ *    - 解析 LLM 的 JSON 响应
+ *    - 类型检查和格式验证
+ *    - 转换为 JavaScript 对象
+ * 
+ * 使用场景：
+ * - 需要结构化数据的问答系统
+ * - API 响应格式标准化
+ * - 数据提取和信息结构化
+ * - 确保输出格式一致性
+ * - 下游系统集成
+ */
+
 import { OpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";

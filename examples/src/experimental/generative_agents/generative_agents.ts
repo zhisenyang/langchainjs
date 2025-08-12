@@ -14,8 +14,8 @@ const Simulation = async () => {
   });
 
   const createNewMemoryRetriever = async () => {
-    // Create a new, demo in-memory vector store retriever unique to the agent.
-    // Better results can be achieved with a more sophisticatd vector store.
+    // 为智能体创建一个新的、演示用的内存向量存储检索器
+    // 使用更复杂的向量存储可以获得更好的结果
     const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
     const retriever = new TimeWeightedVectorStoreRetriever({
       vectorStore,
@@ -25,7 +25,7 @@ const Simulation = async () => {
     return retriever;
   };
 
-  // Initializing Tommie
+  // 初始化 Tommie
   const tommiesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
     llm,
     await createNewMemoryRetriever(),
@@ -35,89 +35,89 @@ const Simulation = async () => {
   const tommie: GenerativeAgent = new GenerativeAgent(llm, tommiesMemory, {
     name: "Tommie",
     age: 25,
-    traits: "anxious, likes design, talkative",
-    status: "looking for a job",
+    traits: "焦虑的、喜欢设计、健谈的",
+    status: "正在寻找工作",
   });
 
-  console.log("Tommie's first summary:\n", await tommie.getSummary());
+  console.log("Tommie 的第一个摘要:\n", await tommie.getSummary());
 
   /*
-    Tommie's first summary:
-    Name: Tommie (age: 25)
-    Innate traits: anxious, likes design, talkative
-    Tommie is an individual with no specific core characteristics described.
+    Tommie 的第一个摘要:
+    姓名: Tommie (年龄: 25)
+    内在特质: anxious, likes design, talkative
+    Tommie 是一个没有描述具体核心特征的个体。
   */
 
-  // Let's give Tommie some memories!
+  // 让我们给 Tommie 一些记忆！
   const tommieObservations = [
-    "Tommie remembers his dog, Bruno, from when he was a kid",
-    "Tommie feels tired from driving so far",
-    "Tommie sees the new home",
-    "The new neighbors have a cat",
-    "The road is noisy at night",
-    "Tommie is hungry",
-    "Tommie tries to get some rest.",
+    "Tommie 记得他小时候的狗 Bruno",
+    "Tommie 开车开得很累",
+    "Tommie 看到了新家",
+    "新邻居有一只猫",
+    "晚上道路很吵",
+    "Tommie 饿了",
+    "Tommie 试图休息一下。",
   ];
   for (const observation of tommieObservations) {
     await tommie.addMemory(observation, new Date());
   }
 
-  // Checking Tommie's summary again after giving him some memories
+  // 在给 Tommie 一些记忆后再次检查他的摘要
   console.log(
-    "Tommie's second summary:\n",
+    "Tommie 的第二个摘要:\n",
     await tommie.getSummary({ forceRefresh: true })
   );
 
   /*
-    Tommie's second summary:
-    Name: Tommie (age: 25)
-    Innate traits: anxious, likes design, talkative
-    Tommie remembers his dog, is tired from driving, sees a new home with neighbors who have a cat, is aware of the noisy road at night, is hungry, and tries to get some rest.
+    Tommie 的第二个摘要:
+    姓名: Tommie (年龄: 25)
+    内在特质: anxious, likes design, talkative
+    Tommie 记得他的狗，开车累了，看到了新家，邻居有猫，晚上道路很吵，饿了，并试图休息一下。
   */
 
   const interviewAgent = async (
     agent: GenerativeAgent,
     message: string
   ): Promise<string> => {
-    // Simple wrapper helping the user interact with the agent
+    // 帮助用户与智能体交互的简单包装器
     const newMessage = `${userName} says ${message}`;
     const response = await agent.generateDialogueResponse(newMessage);
     return response[1];
   };
 
-  // Let's have Tommie start going through a day in his life.
+  // 让我们让 Tommie 开始度过他的一天。
   const observations = [
-    "Tommie wakes up to the sound of a noisy construction site outside his window.",
-    "Tommie gets out of bed and heads to the kitchen to make himself some coffee.",
-    "Tommie realizes he forgot to buy coffee filters and starts rummaging through his moving boxes to find some.",
-    "Tommie finally finds the filters and makes himself a cup of coffee.",
-    "The coffee tastes bitter, and Tommie regrets not buying a better brand.",
-    "Tommie checks his email and sees that he has no job offers yet.",
-    "Tommie spends some time updating his resume and cover letter.",
-    "Tommie heads out to explore the city and look for job openings.",
-    "Tommie sees a sign for a job fair and decides to attend.",
-    "The line to get in is long, and Tommie has to wait for an hour.",
-    "Tommie meets several potential employers at the job fair but doesn't receive any offers.",
-    "Tommie leaves the job fair feeling disappointed.",
-    "Tommie stops by a local diner to grab some lunch.",
-    "The service is slow, and Tommie has to wait for 30 minutes to get his food.",
-    "Tommie overhears a conversation at the next table about a job opening.",
-    "Tommie asks the diners about the job opening and gets some information about the company.",
-    "Tommie decides to apply for the job and sends his resume and cover letter.",
-    "Tommie continues his search for job openings and drops off his resume at several local businesses.",
-    "Tommie takes a break from his job search to go for a walk in a nearby park.",
-    "A dog approaches and licks Tommie's feet, and he pets it for a few minutes.",
-    "Tommie sees a group of people playing frisbee and decides to join in.",
-    "Tommie has fun playing frisbee but gets hit in the face with the frisbee and hurts his nose.",
-    "Tommie goes back to his apartment to rest for a bit.",
-    "A raccoon tore open the trash bag outside his apartment, and the garbage is all over the floor.",
-    "Tommie starts to feel frustrated with his job search.",
-    "Tommie calls his best friend to vent about his struggles.",
-    "Tommie's friend offers some words of encouragement and tells him to keep trying.",
-    "Tommie feels slightly better after talking to his friend.",
+    "Tommie 被窗外嘈杂的建筑工地声音吵醒。",
+    "Tommie 起床后去厨房给自己泡咖啡。",
+    "Tommie 意识到他忘记买咖啡滤纸，开始在搬家箱里翻找。",
+    "Tommie 终于找到了滤纸，给自己泡了一杯咖啡。",
+    "咖啡味道很苦，Tommie 后悔没有买更好的品牌。",
+    "Tommie 检查邮件，发现还没有工作机会。",
+    "Tommie 花时间更新简历和求职信。",
+    "Tommie 出门探索城市，寻找工作机会。",
+    "Tommie 看到招聘会的标志，决定参加。",
+    "排队入场的人很多，Tommie 不得不等一个小时。",
+    "Tommie 在招聘会上遇到几个潜在雇主，但没有收到任何工作机会。",
+    "Tommie 离开招聘会时感到失望。",
+    "Tommie 在当地餐厅停下来吃午饭。",
+    "服务很慢，Tommie 不得不等30分钟才拿到食物。",
+    "Tommie 听到邻桌关于工作机会的对话。",
+    "Tommie 询问用餐者关于工作机会，获得了公司的一些信息。",
+    "Tommie 决定申请这份工作，发送了简历和求职信。",
+    "Tommie 继续寻找工作机会，在几家当地企业投递了简历。",
+    "Tommie 从求职中休息一下，去附近公园散步。",
+    "一只狗走过来舔 Tommie 的脚，他抚摸了几分钟。",
+    "Tommie 看到一群人在玩飞盘，决定加入。",
+    "Tommie 玩飞盘很开心，但被飞盘击中脸部，鼻子受伤了。",
+    "Tommie 回到公寓休息一会儿。",
+    "一只浣熊撕开了他公寓外的垃圾袋，垃圾散落一地。",
+    "Tommie 开始对求职感到沮丧。",
+    "Tommie 打电话给最好的朋友倾诉他的困难。",
+    "Tommie 的朋友给予鼓励的话语，告诉他继续努力。",
+    "Tommie 和朋友交谈后感觉好一些。",
   ];
 
-  // Let's send Tommie on his way. We'll check in on his summary every few observations to watch him evolve
+  // 让我们让 Tommie 开始他的旅程。我们将每隔几个观察检查他的摘要，看他如何演变
   for (let i = 0; i < observations.length; i += 1) {
     const observation = observations[i];
     const [, reaction] = await tommie.generateReaction(observation);
@@ -126,9 +126,7 @@ const Simulation = async () => {
       console.log("*".repeat(40));
       console.log(
         "\x1b[34m",
-        `After ${
-          i + 1
-        } observations, Tommie's summary is:\n${await tommie.getSummary({
+        `经过 ${i + 1} 个观察后，Tommie 的摘要为:\n${await tommie.getSummary({
           forceRefresh: true,
         })}`,
         "\x1b[0m"
@@ -138,72 +136,68 @@ const Simulation = async () => {
   }
 
   /*
-    Tommie wakes up to the sound of a noisy construction site outside his window.  Tommie REACT: Tommie groans in frustration and covers his ears with his pillow.
-    Tommie gets out of bed and heads to the kitchen to make himself some coffee.  Tommie REACT: Tommie rubs his tired eyes before heading to the kitchen to make himself some coffee.
-    Tommie realizes he forgot to buy coffee filters and starts rummaging through his moving boxes to find some.  Tommie REACT: Tommie groans and looks through his moving boxes in search of coffee filters.
-    Tommie finally finds the filters and makes himself a cup of coffee.  Tommie REACT: Tommie sighs in relief and prepares himself a much-needed cup of coffee.
-    The coffee tastes bitter, and Tommie regrets not buying a better brand.  Tommie REACT: Tommie frowns in disappointment as he takes a sip of the bitter coffee.
-    Tommie checks his email and sees that he has no job offers yet.  Tommie REACT: Tommie sighs in disappointment before pushing himself away from the computer with a discouraged look on his face.
-    Tommie spends some time updating his resume and cover letter.  Tommie REACT: Tommie takes a deep breath and stares at the computer screen as he updates his resume and cover letter.
-    Tommie heads out to explore the city and look for job openings.  Tommie REACT: Tommie takes a deep breath and steps out into the city, ready to find the perfect job opportunity.
-    Tommie sees a sign for a job fair and decides to attend.  Tommie REACT: Tommie takes a deep breath and marches towards the job fair, determination in his eyes.
-    The line to get in is long, and Tommie has to wait for an hour.  Tommie REACT: Tommie groans in frustration as he notices the long line.
-    Tommie meets several potential employers at the job fair but doesn't receive any offers.  Tommie REACT: Tommie's face falls as he listens to each potential employer's explanation as to why they can't hire him.
-    Tommie leaves the job fair feeling disappointed.  Tommie REACT: Tommie's face falls as he walks away from the job fair, disappointment evident in his expression.
-    Tommie stops by a local diner to grab some lunch.  Tommie REACT: Tommie smiles as he remembers Bruno as he walks into the diner, feeling both a sense of nostalgia and excitement.
-    The service is slow, and Tommie has to wait for 30 minutes to get his food.  Tommie REACT: Tommie sighs in frustration and taps his fingers on the table, growing increasingly impatient.
-    Tommie overhears a conversation at the next table about a job opening.  Tommie REACT: Tommie leans in closer, eager to hear the conversation.
-    Tommie asks the diners about the job opening and gets some information about the company.  Tommie REACT: Tommie eagerly listens to the diner's description of the company, feeling hopeful about the job opportunity.
-    Tommie decides to apply for the job and sends his resume and cover letter.  Tommie REACT: Tommie confidently sends in his resume and cover letter, determined to get the job.
-    Tommie continues his search for job openings and drops off his resume at several local businesses.  Tommie REACT: Tommie confidently drops his resume off at the various businesses, determined to find a job.
-    Tommie takes a break from his job search to go for a walk in a nearby park.  Tommie REACT: Tommie takes a deep breath of the fresh air and smiles in appreciation as he strolls through the park.
-    A dog approaches and licks Tommie's feet, and he pets it for a few minutes.  Tommie REACT: Tommie smiles in surprise as he pets the dog, feeling a sense of comfort and nostalgia.
+    Tommie 被窗外嘈杂的建筑工地声音吵醒。  Tommie REACT: Tommie 沮丧地呻吟着，用枕头捂住耳朵。
+    Tommie 起床后去厨房给自己泡咖啡。  Tommie REACT: Tommie 在去厨房泡咖啡前揉着疲惫的眼睛。
+    Tommie 意识到他忘记买咖啡滤纸，开始在搬家箱里翻找。  Tommie REACT: Tommie 呻吟着在搬家箱里寻找咖啡滤纸。
+    Tommie 终于找到了滤纸，给自己泡了一杯咖啡。  Tommie REACT: Tommie 松了一口气，准备了一杯急需的咖啡。
+    咖啡味道很苦，Tommie 后悔没有买更好的品牌。  Tommie REACT: Tommie 喝了一口苦咖啡，失望地皱眉。
+    Tommie 检查邮件，发现还没有工作机会。  Tommie REACT: Tommie 失望地叹气，沮丧地从电脑前推开。
+    Tommie 花时间更新简历和求职信。  Tommie REACT: Tommie 深呼吸，盯着电脑屏幕更新简历和求职信。
+    Tommie 出门探索城市，寻找工作机会。  Tommie REACT: Tommie 深呼吸，走进城市，准备找到完美的工作机会。
+    Tommie 看到招聘会的标志，决定参加。  Tommie REACT: Tommie 深呼吸，向招聘会走去，眼中带着决心。
+    排队入场的人很多，Tommie 不得不等一个小时。  Tommie REACT: Tommie 注意到长队，沮丧地呻吟。
+    Tommie 在招聘会上遇到几个潜在雇主，但没有收到任何工作机会。  Tommie REACT: Tommie 听着每个潜在雇主的解释，脸色沉了下来。
+    Tommie 离开招聘会时感到失望。  Tommie REACT: Tommie 离开招聘会时脸色沉了下来，失望之情溢于言表。
+    Tommie 在当地餐厅停下来吃午饭。  Tommie REACT: Tommie 走进餐厅时想起 Bruno，微笑着，感到怀旧和兴奋。
+    服务很慢，Tommie 不得不等30分钟才拿到食物。  Tommie REACT: Tommie 沮丧地叹气，敲着桌子，越来越不耐烦。
+    Tommie 听到邻桌关于工作机会的对话。  Tommie REACT: Tommie 靠近一点，渴望听到对话。
+    Tommie 询问用餐者关于工作机会，获得了公司的一些信息。  Tommie REACT: Tommie 热切地听着用餐者对公司的描述，对工作机会充满希望。
+    Tommie 决定申请这份工作，发送了简历和求职信。  Tommie REACT: Tommie 自信地发送简历和求职信，决心得到这份工作。
+    Tommie 继续寻找工作机会，在几家当地企业投递了简历。  Tommie REACT: Tommie 自信地在各个企业投递简历，决心找到工作。
+    Tommie 从求职中休息一下，去附近公园散步。  Tommie REACT: Tommie 深呼吸新鲜空气，在公园里漫步时感激地微笑。
+    一只狗走过来舔 Tommie 的脚，他抚摸了几分钟。  Tommie REACT: Tommie 抚摸狗时惊讶地微笑，感到安慰和怀旧。
     ****************************************
-    After 20 observations, Tommie's summary is:
-    Name: Tommie (age: 25)
-    Innate traits: anxious, likes design, talkative
-    Tommie is a determined and resilient individual who remembers his dog from when he was a kid. Despite feeling tired from driving, he has the courage to explore the city, looking for job openings. He persists in updating his resume and cover letter in the pursuit of finding the perfect job opportunity, even attending job fairs when necessary, and is disappointed when he's not offered a job.
+    经过 20 个观察后，Tommie 的摘要为:
+    姓名: Tommie (年龄: 25)
+    内在特质: anxious, likes design, talkative
+    Tommie 是一个有决心和韧性的个体，记得他小时候的狗。尽管开车累了，他有勇气探索城市，寻找工作机会。他坚持更新简历和求职信，追求找到完美的工作机会，甚至在必要时参加招聘会，当没有获得工作机会时感到失望。
     ****************************************
-    Tommie sees a group of people playing frisbee and decides to join in.  Tommie REACT: Tommie smiles and approaches the group, eager to take part in the game.
-    Tommie has fun playing frisbee but gets hit in the face with the frisbee and hurts his nose.  Tommie REACT: Tommie grimaces in pain and raises his hand to his nose, checking to see if it's bleeding.
-    Tommie goes back to his apartment to rest for a bit.  Tommie REACT: Tommie yawns and trudges back to his apartment, feeling exhausted from his busy day.
-    A raccoon tore open the trash bag outside his apartment, and the garbage is all over the floor.  Tommie REACT: Tommie shakes his head in annoyance as he surveys the mess.
-    Tommie starts to feel frustrated with his job search.  Tommie REACT: Tommie sighs in frustration and shakes his head, feeling discouraged from his lack of progress.
-    Tommie calls his best friend to vent about his struggles.  Tommie REACT: Tommie runs his hands through his hair and sighs heavily, overwhelmed by his job search.
-    Tommie's friend offers some words of encouragement and tells him to keep trying.  Tommie REACT: Tommie gives his friend a grateful smile, feeling comforted by the words of encouragement.
-    Tommie feels slightly better after talking to his friend.  Tommie REACT: Tommie gives a small smile of appreciation to his friend, feeling grateful for the words of encouragement.
+    Tommie 看到一群人在玩飞盘，决定加入。  Tommie REACT: Tommie 微笑着接近这群人，渴望参与游戏。
+    Tommie 玩飞盘很开心，但被飞盘击中脸部，鼻子受伤了。  Tommie REACT: Tommie 痛苦地皱眉，用手摸鼻子，检查是否流血。
+    Tommie 回到公寓休息一会儿。  Tommie REACT: Tommie 打着哈欠，疲惫地回到公寓，感到忙碌的一天让他精疲力尽。
+    一只浣熊撕开了他公寓外的垃圾袋，垃圾散落一地。  Tommie REACT: Tommie 恼怒地摇头，看着这混乱。
+    Tommie 开始对求职感到沮丧。  Tommie REACT: Tommie 沮丧地叹气摇头，因缺乏进展而感到气馁。
+    Tommie 打电话给最好的朋友倾诉他的困难。  Tommie REACT: Tommie 用手梳理头发，重重地叹气，被求职压得喘不过气。
+    Tommie 的朋友给予鼓励的话语，告诉他继续努力。  Tommie REACT: Tommie 给朋友一个感激的微笑，因鼓励的话语而感到安慰。
+    Tommie 和朋友交谈后感觉好一些。  Tommie REACT: Tommie 给朋友一个感激的小微笑，感激鼓励的话语。
   */
 
-  // Interview after the day
-  console.log(
-    await interviewAgent(tommie, "Tell me about how your day has been going")
-  );
+  // 一天结束后的采访
+  console.log(await interviewAgent(tommie, "告诉我你今天过得怎么样"));
   /*
-    Tommie said "My day has been pretty hectic. I've been driving around looking for job openings, attending job fairs, and updating my resume and cover letter. It's been really exhausting, but I'm determined to find the perfect job for me."
+    Tommie 说："我的一天很忙乱。我一直在开车寻找工作机会，参加招聘会，更新简历和求职信。真的很累，但我决心找到完美的工作。"
   */
-  console.log(await interviewAgent(tommie, "How do you feel about coffee?"));
+  console.log(await interviewAgent(tommie, "你对咖啡有什么感觉？"));
   /*
-    Tommie said "I actually love coffee - it's one of my favorite things. I try to drink it every day, especially when I'm stressed from job searching."
+    Tommie 说："我其实很喜欢咖啡——这是我最喜欢的东西之一。我每天都试着喝，特别是在求职压力大的时候。"
   */
-  console.log(
-    await interviewAgent(tommie, "Tell me about your childhood dog!")
-  );
+  console.log(await interviewAgent(tommie, "告诉我关于你童年狗狗的事！"));
   /*
-    Tommie said "My childhood dog was named Bruno. He was an adorable black Labrador Retriever who was always full of energy. Every time I came home he'd be so excited to see me, it was like he never stopped smiling. He was always ready for adventure and he was always my shadow. I miss him every day."
+    Tommie 说："我童年的狗叫 Bruno。他是一只可爱的黑色拉布拉多猎犬，总是充满活力。每次我回家，他见到我都那么兴奋，就像他从未停止微笑一样。他总是准备好冒险，总是我的影子。我每天都想念他。"
   */
 
   console.log(
-    "Tommie's second summary:\n",
+    "Tommie 的第二个摘要:\n",
     await tommie.getSummary({ forceRefresh: true })
   );
   /*
-    Tommie's second summary:
-    Name: Tommie (age: 25)
-    Innate traits: anxious, likes design, talkative
-    Tommie is a hardworking individual who is looking for new opportunities. Despite feeling tired, he is determined to find the perfect job. He remembers his dog from when he was a kid, is hungry, and is frustrated at times. He shows resilience when searching for his coffee filters, disappointment when checking his email and finding no job offers, and determination when attending the job fair.
+    Tommie 的第二个摘要:
+    姓名: Tommie (年龄: 25)
+    内在特质: anxious, likes design, talkative
+    Tommie 是一个勤奋的个体，正在寻找新的机会。尽管感到疲惫，他决心找到完美的工作。他记得小时候的狗，饿了，有时会感到沮丧。他在寻找咖啡滤纸时表现出韧性，在检查邮件发现没有工作机会时感到失望，在参加招聘会时表现出决心。
   */
 
-  // Let’s add a second character to have a conversation with Tommie. Feel free to configure different traits.
+  // 让我们添加第二个角色与 Tommie 对话。请随意配置不同的特质。
   const evesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
     llm,
     await createNewMemoryRetriever(),
@@ -216,21 +210,21 @@ const Simulation = async () => {
   const eve: GenerativeAgent = new GenerativeAgent(llm, evesMemory, {
     name: "Eve",
     age: 34,
-    traits: "curious, helpful",
+    traits: "好奇的、乐于助人的",
     status:
-      "just started her new job as a career counselor last week and received her first assignment, a client named Tommie.",
+      "上周刚开始她的新工作作为职业顾问，并收到了她的第一个任务，一个名为 Tommie 的客户。",
     // dailySummaries: [
-    //   "Eve started her new job as a career counselor last week and received her first assignment, a client named Tommie."
+    //   "Eve 上周刚开始她的新工作作为职业顾问，并收到了她的第一个任务，一个名为 Tommie 的客户。"
     // ]
   });
 
   const eveObservations = [
-    "Eve overhears her colleague say something about a new client being hard to work with",
-    "Eve wakes up and hears the alarm",
-    "Eve eats a boal of porridge",
-    "Eve helps a coworker on a task",
-    "Eve plays tennis with her friend Xu before going to work",
-    "Eve overhears her colleague say something about Tommie being hard to work with",
+    "Eve 听到同事说新客户很难合作",
+    "Eve 醒来听到闹钟声",
+    "Eve 吃了一碗粥",
+    "Eve 帮助同事完成任务",
+    "Eve 上班前和朋友 Xu 打网球",
+    "Eve 听到同事说 Tommie 很难合作",
   ];
 
   for (const observation of eveObservations) {
@@ -240,42 +234,39 @@ const Simulation = async () => {
   const eveInitialSummary: string = await eve.getSummary({
     forceRefresh: true,
   });
-  console.log("Eve's initial summary\n", eveInitialSummary);
+  console.log("Eve 的初始摘要\n", eveInitialSummary);
   /*
-    Eve's initial summary
-    Name: Eve (age: 34)
-    Innate traits: curious, helpful
-    Eve is an attentive listener, helpful colleague, and sociable friend who enjoys playing tennis.
+    Eve 的初始摘要
+    姓名: Eve (年龄: 34)
+    内在特质: curious, helpful
+    Eve 是一个细心的倾听者，乐于助人的同事，喜欢打网球的社交朋友。
   */
 
-  // Let’s “Interview” Eve before she speaks with Tommie.
-  console.log(await interviewAgent(eve, "How are you feeling about today?"));
+  // 让我们在 Eve 与 Tommie 交谈之前"采访"她。
+  console.log(await interviewAgent(eve, "你今天感觉如何？"));
   /*
-    Eve said "I'm feeling a bit anxious about meeting my new client, but I'm sure it will be fine! How about you?".
+    Eve 说："我有点担心见到新客户，但我相信会没事的！你呢？"
   */
-  console.log(await interviewAgent(eve, "What do you know about Tommie?"));
+  console.log(await interviewAgent(eve, "你对 Tommie 了解什么？"));
   /*
-    Eve said "I know that Tommie is a recent college graduate who's been struggling to find a job. I'm looking forward to figuring out how I can help him move forward."
+    Eve 说："我知道 Tommie 是最近毕业的大学生，一直在努力找工作。我期待找出如何帮助他前进。"
   */
   console.log(
-    await interviewAgent(
-      eve,
-      "Tommie is looking to find a job. What are are some things you'd like to ask him?"
-    )
+    await interviewAgent(eve, "Tommie 正在寻找工作。你想问他一些什么问题？")
   );
   /*
-    Eve said: "I'd really like to get to know more about Tommie's professional background and experience, and why he is looking for a job. And I'd also like to know more about his strengths and passions and what kind of work he would be best suited for. That way I can help him find the right job to fit his needs."
+    Eve 说："我真的很想了解更多关于 Tommie 的专业背景和经验，以及他为什么在找工作。我还想了解他的优势和热情，以及他最适合什么样的工作。这样我就能帮助他找到适合他需求的工作。"
   */
 
-  // Generative agents are much more complex when they interact with a virtual environment or with each other.
-  // Below, we run a simple conversation between Tommie and Eve.
+  // 当生成式智能体与虚拟环境或彼此交互时，它们变得更加复杂。
+  // 下面，我们运行 Tommie 和 Eve 之间的简单对话。
   const runConversation = async (
     agents: GenerativeAgent[],
     initialObservation: string
   ): Promise<void> => {
-    // Starts the conversation bewteen two agents
+    // 开始两个智能体之间的对话
     let [, observation] = await agents[1].generateReaction(initialObservation);
-    console.log("Initial reply:", observation);
+    console.log("初始回复:", observation);
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -283,7 +274,7 @@ const Simulation = async () => {
       for (const agent of agents) {
         const [stayInDialogue, agentObservation] =
           await agent.generateDialogueResponse(observation);
-        console.log("Next reply:", agentObservation);
+        console.log("下一个回复:", agentObservation);
         observation = agentObservation;
         if (!stayInDialogue) {
           breakDialogue = true;
@@ -299,72 +290,72 @@ const Simulation = async () => {
   const agents: GenerativeAgent[] = [tommie, eve];
   await runConversation(
     agents,
-    "Tommie said: Hi, Eve. Thanks for agreeing to meet with me today. I have a bunch of questions and am not sure where to start. Maybe you could first share about your experience?"
+    "Tommie 说：嗨，Eve。谢谢你今天同意和我见面。我有很多问题，不知道从哪里开始。也许你可以先分享一下你的经验？"
   );
 
   /*
-    Initial reply: Eve said "Of course, Tommie. I'd be happy to share about my experience. What specific questions do you have?"
-    Next reply: Tommie said "Thank you, Eve. I'm curious about what strategies you used in your own job search. Did you have any specific tactics that helped you stand out to employers?"
-    Next reply: Eve said "Sure, Tommie. I found that networking and reaching out to professionals in my field was really helpful. I also made sure to tailor my resume and cover letter to each job I applied to. Do you have any specific questions about those strategies?"
-    Next reply: Tommie said "Thank you, Eve. That's really helpful advice. Did you have any specific ways of networking that worked well for you?"
-    Next reply: Eve said "Sure, Tommie. I found that attending industry events and connecting with professionals on LinkedIn were both great ways to network. Do you have any specific questions about those tactics?"
-    Next reply: Tommie said "That's really helpful, thank you for sharing. Did you find that you were able to make meaningful connections through LinkedIn?"
-    Next reply: Eve said "Yes, definitely. I was able to connect with several professionals in my field and even landed a job through a LinkedIn connection. Have you had any luck with networking on LinkedIn?"
-    Next reply: Tommie said "That's really impressive! I haven't had much luck yet, but I'll definitely keep trying. Thank you for the advice, Eve."
-    Next reply: Eve said "Glad I could help, Tommie. Is there anything else you want to know?"
-    Next reply: Tommie said "Thanks again, Eve. I really appreciate your advice and I'll definitely put it into practice. Have a great day!"
-    Next reply: Eve said "You're welcome, Tommie! Don't hesitate to reach out if you have any more questions. Have a great day too!"
+    初始回复: Eve 说："当然，Tommie。我很乐意分享我的经验。你有什么具体问题吗？"
+    下一个回复: Tommie 说："谢谢你，Eve。我很好奇你在求职时使用了什么策略。你有什么具体的技巧帮助你脱颖而出吗？"
+    下一个回复: Eve 说："当然，Tommie。我发现建立人脉和联系我领域的专业人士真的很有帮助。我还确保为每份工作定制简历和求职信。你对这些策略有什么具体问题吗？"
+    下一个回复: Tommie 说："谢谢你，Eve。这真的很有用的建议。你有什么具体的建立人脉的方式对你很有效吗？"
+    下一个回复: Eve 说："当然，Tommie。我发现参加行业活动和在 LinkedIn 上联系专业人士都是建立人脉的好方法。你对这些技巧有什么具体问题吗？"
+    下一个回复: Tommie 说："这真的很有帮助，谢谢你的分享。你发现你能通过 LinkedIn 建立有意义的联系吗？"
+    下一个回复: Eve 说："是的，当然。我能够联系到我领域的几个专业人士，甚至通过 LinkedIn 联系找到了一份工作。你在 LinkedIn 上建立人脉有什么运气吗？"
+    下一个回复: Tommie 说："这真的很令人印象深刻！我还没有什么运气，但我一定会继续努力。谢谢你的建议，Eve。"
+    下一个回复: Eve 说："很高兴能帮助你，Tommie。你还有其他想知道的吗？"
+    下一个回复: Tommie 说："再次感谢，Eve。我真的很感激你的建议，我一定会付诸实践。祝你今天愉快！"
+    下一个回复: Eve 说："不客气，Tommie！如果你有更多问题，不要犹豫联系我。也祝你今天愉快！"
   */
 
-  // Since the generative agents retain their memories from the day, we can ask them about their plans, conversations, and other memories.
+  // 由于生成式智能体保留了当天的记忆，我们可以询问他们的计划、对话和其他记忆。
   const tommieSummary: string = await tommie.getSummary({
     forceRefresh: true,
   });
-  console.log("Tommie's third and final summary\n", tommieSummary);
+  console.log("Tommie 的第三个也是最后一个摘要\n", tommieSummary);
   /*
-    Tommie's third and final summary
-    Name: Tommie (age: 25)
-    Innate traits: anxious, likes design, talkative
-    Tommie is a determined individual, who demonstrates resilience in the face of disappointment. He is also a nostalgic person, remembering fondly his childhood pet, Bruno. He is resourceful, searching through his moving boxes to find what he needs, and takes initiative to attend job fairs to look for job openings.
+    Tommie 的第三个也是最后一个摘要
+    姓名: Tommie (年龄: 25)
+    内在特质: anxious, likes design, talkative
+    Tommie 是一个有决心的个体，在面对失望时表现出韧性。他也是一个怀旧的人，深情地记得他童年的宠物 Bruno。他很有资源，在搬家箱中寻找他需要的东西，并主动参加招聘会寻找工作机会。
   */
 
   const eveSummary: string = await eve.getSummary({ forceRefresh: true });
-  console.log("Eve's final summary\n", eveSummary);
+  console.log("Eve 的最终摘要\n", eveSummary);
   /*
-    Eve's final summary
-    Name: Eve (age: 34)
-    Innate traits: curious, helpful
-    Eve is a helpful and encouraging colleague who actively listens to her colleagues and offers advice on how to move forward. She is willing to take time to understand her clients and their goals, and is committed to helping them succeed.
+    Eve 的最终摘要
+    姓名: Eve (年龄: 34)
+    内在特质: curious, helpful
+    Eve 是一个乐于助人和鼓励的同事，积极倾听同事的意见并提供如何前进的建议。她愿意花时间了解客户及其目标，并致力于帮助他们成功。
   */
 
   const interviewOne: string = await interviewAgent(
     tommie,
-    "How was your conversation with Eve?"
+    "你与 Eve 的对话如何？"
   );
-  console.log("USER: How was your conversation with Eve?\n");
+  console.log("用户: 你与 Eve 的对话如何？\n");
   console.log(interviewOne);
   /*
-    Tommie said "It was great. She was really helpful and knowledgeable. I'm thankful that she took the time to answer all my questions."
+    Tommie 说："很棒。她真的很有帮助，知识渊博。我很感激她花时间回答我所有的问题。"
   */
 
   const interviewTwo: string = await interviewAgent(
     eve,
-    "How was your conversation with Tommie?"
+    "你与 Tommie 的对话如何？"
   );
-  console.log("USER: How was your conversation with Tommie?\n");
+  console.log("用户: 你与 Tommie 的对话如何？\n");
   console.log(interviewTwo);
   /*
-    Eve said "The conversation went very well. We discussed his goals and career aspirations, what kind of job he is looking for, and his experience and qualifications. I'm confident I can help him find the right job."
+    Eve 说："对话进行得很顺利。我们讨论了他的目标和职业抱负，他在寻找什么样的工作，以及他的经验和资格。我相信我能帮助他找到合适的工作。"
   */
 
   const interviewThree: string = await interviewAgent(
     eve,
-    "What do you wish you would have said to Tommie?"
+    "你希望你对 Tommie 说了什么？"
   );
-  console.log("USER: What do you wish you would have said to Tommie?\n");
+  console.log("用户: 你希望你对 Tommie 说了什么？\n");
   console.log(interviewThree);
   /*
-    Eve said "It's ok if you don't have all the answers yet. Let's take some time to learn more about your experience and qualifications, so I can help you find a job that fits your goals."
+    Eve 说："如果你还没有所有答案也没关系。让我们花点时间了解更多关于你的经验和资格，这样我就能帮助你找到符合你目标的工作。"
   */
 
   return {
@@ -380,7 +371,7 @@ const runSimulation = async () => {
   try {
     await Simulation();
   } catch (error) {
-    console.log("error running simulation:", error);
+    console.log("运行模拟时出错:", error);
     throw error;
   }
 };

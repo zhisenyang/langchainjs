@@ -1,3 +1,36 @@
+/**
+ * Google Calendar 工具集成智能代理示例
+ * 
+ * 这个文件演示了如何将 Google Calendar 工具集成到 LangChain 智能代理中，实现日历自动化管理。
+ * 主要功能：
+ * 
+ * 1. 日历工具配置：
+ *    - 配置 Google Calendar API 认证
+ *    - 设置服务账户凭据
+ *    - 指定日历权限范围
+ * 
+ * 2. 工具集成：
+ *    - GoogleCalendarCreateTool: 创建日历事件
+ *    - GoogleCalendarViewTool: 查看日历事件
+ *    - Calculator: 数学计算工具
+ * 
+ * 3. 智能代理功能：
+ *    - 使用 React 代理架构
+ *    - 自然语言处理日历操作
+ *    - 多工具协同工作
+ * 
+ * 4. 实际应用场景：
+ *    - 创建会议并添加计算结果到议程
+ *    - 查询本周会议安排
+ *    - 智能日程管理
+ * 
+ * 使用场景：
+ * - 智能日历助手
+ * - 会议安排自动化
+ * - 日程管理机器人
+ * - 企业办公自动化
+ */
+
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import { Calculator } from "@langchain/community/tools/calculator";

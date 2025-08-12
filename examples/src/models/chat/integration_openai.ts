@@ -1,3 +1,38 @@
+/**
+ * OpenAI 聊天模型集成示例
+ * 
+ * 这个文件演示了如何使用 LangChain 集成 OpenAI 的聊天模型，包括基础对话、函数调用和 JSON 模式。
+ * 主要功能：
+ * 
+ * 1. 基础聊天模型配置：
+ *    - 配置 GPT-4o-mini 模型
+ *    - 设置温度参数控制创造性
+ *    - 配置 API 密钥认证
+ * 
+ * 2. 函数调用功能：
+ *    - 使用 GPT-4 模型进行函数调用
+ *    - 定义天气查询函数的 schema
+ *    - 强制模型使用特定函数
+ *    - 处理结构化函数调用响应
+ * 
+ * 3. JSON 模式输出：
+ *    - 使用 GPT-4-1106-preview 的 JSON 模式
+ *    - 强制模型输出有效的 JSON 格式
+ *    - 配置响应格式和 token 限制
+ * 
+ * 4. 实际应用场景：
+ *    - 天气信息查询
+ *    - 结构化数据生成
+ *    - API 集成和函数调用
+ * 
+ * 使用场景：
+ * - 智能对话系统
+ * - 函数调用和工具集成
+ * - 结构化数据生成
+ * - API 服务集成
+ * - 多模态应用开发
+ */
+
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage } from "@langchain/core/messages";
 

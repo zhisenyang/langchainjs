@@ -1,3 +1,21 @@
+/**
+ * LangChain 智能代理快速入门示例
+ * 
+ * 这个文件演示了如何使用 LangChain 创建一个功能完整的智能代理系统。
+ * 主要功能：
+ * - 集成 Tavily 搜索工具进行实时网络搜索
+ * - 创建基于向量存储的检索工具
+ * - 使用 OpenAI 函数调用代理执行复杂任务
+ * - 实现带有消息历史记录的对话管理
+ * - 演示代理如何结合多种工具回答问题
+ * 
+ * 示例包含：
+ * - 网络搜索功能（天气查询等）
+ * - 文档检索功能（LangSmith 相关问题）
+ * - 对话记忆管理
+ * - 多轮对话处理
+ */
+
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";

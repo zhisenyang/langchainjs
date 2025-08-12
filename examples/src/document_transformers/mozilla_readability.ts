@@ -1,3 +1,53 @@
+/**
+ * Mozilla Readability 转换器示例
+ * 
+ * 这个文件演示了如何使用 LangChain 的 Mozilla Readability 转换器来提取网页的主要内容。
+ * 主要功能：
+ * 
+ * 1. Mozilla Readability 算法：
+ *    - 使用 Mozilla 的 Readability 算法
+ *    - 自动识别网页的主要内容区域
+ *    - 过滤掉广告、导航、侧边栏等无关内容
+ * 
+ * 2. 智能内容提取：
+ *    - 分析 HTML 结构和语义
+ *    - 识别文章标题、正文、段落
+ *    - 保留重要的文本内容和格式
+ * 
+ * 3. 网页清理功能：
+ *    - 移除不相关的 HTML 元素
+ *    - 过滤广告和推广内容
+ *    - 保留核心的阅读内容
+ * 
+ * 4. 文档处理流水线：
+ *    - 先使用 Readability 提取主要内容
+ *    - 再使用 HTML 文本分割器进行分割
+ *    - 管道式的文档处理流程
+ * 
+ * 5. HTML 文档加载：
+ *    - 使用 HTMLWebBaseLoader 加载网页
+ *    - 从 Hacker News 页面获取内容
+ *    - 处理复杂的网页结构
+ * 
+ * 6. 智能分割处理：
+ *    - 使用 HTML 语言特定的分割器
+ *    - 识别 HTML 标签和结构边界
+ *    - 保持内容的逻辑完整性
+ * 
+ * 7. 实际应用效果：
+ *    - 提取干净的文章内容
+ *    - 去除网页噪音和干扰
+ *    - 适合阅读和分析的文本格式
+ * 
+ * 使用场景：
+ * - 新闻文章的内容提取
+ * - 博客和文章的清理
+ * - 网页内容的标准化
+ * - 阅读器应用的内容处理
+ * - 内容聚合和分析
+ * - 搜索引擎的内容索引
+ */
+
 import { HTMLWebBaseLoader } from "@langchain/community/document_loaders/web/html";
 import { MozillaReadabilityTransformer } from "@langchain/community/document_transformers/mozilla_readability";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";

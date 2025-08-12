@@ -1,3 +1,15 @@
+/**
+ * LangChain.js 示例运行器
+ * 
+ * 这个文件是 LangChain.js 示例项目的主入口点，用于动态加载和运行指定的示例文件。
+ * 主要功能：
+ * - 解析命令行参数，获取要运行的示例文件路径
+ * - 处理各种路径格式（相对路径、绝对路径等）
+ * - 动态导入并执行指定的示例文件
+ * - 处理异步执行和错误捕获
+ * - 确保所有回调函数执行完毕
+ */
+
 import path from "path";
 import url from "url";
 import { awaitAllCallbacks } from "@langchain/core/callbacks/promises";

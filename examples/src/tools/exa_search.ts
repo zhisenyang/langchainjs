@@ -1,3 +1,36 @@
+/**
+ * Exa 搜索工具与智能代理集成示例
+ * 
+ * 这个文件演示了如何将 Exa 搜索工具集成到 LangChain 智能代理中。
+ * 主要功能：
+ * 
+ * 1. Exa 搜索配置：
+ *    - 配置 Exa 搜索 API 客户端
+ *    - 设置 API 密钥认证
+ *    - 创建搜索结果工具
+ * 
+ * 2. 智能代理集成：
+ *    - 使用 OpenAI 函数调用代理
+ *    - 从 LangChain Hub 获取提示模板
+ *    - 配置代理执行器
+ * 
+ * 3. 搜索功能：
+ *    - 执行高质量的网络搜索
+ *    - 获取相关和准确的搜索结果
+ *    - 智能筛选和排序结果
+ * 
+ * 4. 实际应用：
+ *    - 天气信息查询
+ *    - 实时信息检索
+ *    - 网络内容搜索
+ * 
+ * 使用场景：
+ * - 高质量信息检索
+ * - 智能搜索助手
+ * - 实时数据查询
+ * - 研究和分析工具
+ */
+
 import { ExaSearchResults } from "@langchain/exa";
 import { ChatOpenAI } from "@langchain/openai";
 import type { ChatPromptTemplate } from "@langchain/core/prompts";

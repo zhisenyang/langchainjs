@@ -1,3 +1,36 @@
+/**
+ * 多查询检索器示例
+ * 
+ * 这个文件演示了如何使用 MultiQueryRetriever 来改善检索效果。
+ * 主要功能：
+ * 
+ * 1. 向量存储构建：
+ *    - 使用内存向量存储保存示例文档
+ *    - 集成 Cohere 嵌入模型
+ *    - 创建可搜索的文档集合
+ * 
+ * 2. 多查询生成：
+ *    - 使用 LLM 从原始查询生成多个相关查询
+ *    - 自动扩展查询范围和角度
+ *    - 提高检索的召回率和准确性
+ * 
+ * 3. 智能检索：
+ *    - 对多个生成的查询分别执行检索
+ *    - 合并和去重检索结果
+ *    - 返回更全面的相关文档
+ * 
+ * 4. 结果优化：
+ *    - 通过多角度查询减少遗漏
+ *    - 提高检索系统的鲁棒性
+ *    - 处理查询表达的多样性
+ * 
+ * 使用场景：
+ * - 提高搜索质量和覆盖率
+ * - 处理模糊或不完整的查询
+ * - 知识库检索优化
+ * - 问答系统增强
+ */
+
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { CohereEmbeddings } from "@langchain/cohere";
 import { MultiQueryRetriever } from "langchain/retrievers/multi_query";

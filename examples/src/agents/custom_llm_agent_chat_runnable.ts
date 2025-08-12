@@ -14,7 +14,7 @@ import { SerpAPI } from "@langchain/community/tools/serpapi";
  * @important The stop token must be set, if not the LLM will happily continue generating text forever.
  */
 const model = new ChatOpenAI({
-  model: "gpt-4o-mini",
+  model: "gpt-4o-mini",·
   temperature: 0,
 }).withConfig({
   stop: ["\nObservation"],

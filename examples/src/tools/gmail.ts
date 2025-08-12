@@ -1,3 +1,29 @@
+/**
+ * Gmail 工具集成智能代理示例
+ * 
+ * 这个文件演示了如何将 Gmail 工具集成到 LangChain 智能代理中，实现邮件自动化操作。
+ * 主要功能：
+ * - 创建 Gmail 草稿邮件
+ * - 获取指定邮件内容
+ * - 获取邮件线程信息
+ * - 搜索邮件内容
+ * - 发送邮件消息
+ * - 使用结构化聊天代理处理复杂的邮件操作
+ * 
+ * 工具包含：
+ * - GmailCreateDraft: 创建邮件草稿
+ * - GmailGetMessage: 获取邮件消息
+ * - GmailGetThread: 获取邮件线程
+ * - GmailSearch: 搜索邮件
+ * - GmailSendMessage: 发送邮件
+ * 
+ * 使用场景：
+ * - 邮件自动化处理
+ * - 智能邮件助手
+ * - 邮件内容分析和管理
+ * - 自动回复和邮件分类
+ */
+
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { OpenAI } from "@langchain/openai";
 import {

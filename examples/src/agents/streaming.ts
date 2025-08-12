@@ -1,3 +1,55 @@
+/**
+ * 流式代理与回调处理示例
+ * 
+ * 这个文件演示了如何在 LangChain 代理系统中实现流式处理和自定义回调处理器。
+ * 主要功能：
+ * 
+ * 1. 自定义回调处理器：
+ *    - 继承 BaseCallbackHandler 创建自定义处理器
+ *    - 实现多种回调方法监控代理执行
+ *    - 支持实时 token 流式输出
+ * 
+ * 2. 回调方法实现：
+ *    - handleLLMNewToken: 处理流式 token 输出
+ *    - handleLLMStart: 监控 LLM 开始执行
+ *    - handleChainStart: 监控链开始执行
+ *    - handleAgentAction: 监控代理动作
+ *    - handleToolStart: 监控工具开始执行
+ * 
+ * 3. 多种回调创建方式：
+ *    - 类继承方式：完整的自定义回调类
+ *    - fromMethods 方式：快速创建回调处理器
+ *    - 支持多个回调处理器同时工作
+ * 
+ * 4. 流式处理配置：
+ *    - 启用 ChatOpenAI 的流式模式
+ *    - 实时输出 token 生成过程
+ *    - 提供更好的用户体验
+ * 
+ * 5. Zero-Shot 代理：
+ *    - 使用 ZeroShotAgent 创建代理
+ *    - 集成计算器工具
+ *    - 支持数学计算任务
+ * 
+ * 6. 回调作用域管理：
+ *    - 对象级别的回调绑定
+ *    - 执行级别的回调传递
+ *    - 灵活的回调管理策略
+ * 
+ * 7. 实际应用演示：
+ *    - 计算 "2 的 8 次方"
+ *    - 展示完整的执行流程
+ *    - 实时监控每个执行步骤
+ * 
+ * 使用场景：
+ * - 实时代理监控和调试
+ * - 流式用户界面开发
+ * - 性能分析和优化
+ * - 用户体验改进
+ * - 系统日志和审计
+ * - 开发和测试工具
+ */
+
 import { LLMChain } from "langchain/chains";
 import { AgentExecutor, ZeroShotAgent } from "langchain/agents";
 import { ChatOpenAI } from "@langchain/openai";

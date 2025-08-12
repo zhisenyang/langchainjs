@@ -1,3 +1,48 @@
+/**
+ * HTML 到文本转换器示例
+ * 
+ * 这个文件演示了如何使用 LangChain 的文档转换器将 HTML 内容转换为纯文本。
+ * 主要功能：
+ * 
+ * 1. HTML 文档加载：
+ *    - 使用 HTMLWebBaseLoader 加载网页内容
+ *    - 从 Hacker News 页面获取 HTML 数据
+ *    - 保留原始的 HTML 结构和标签
+ * 
+ * 2. HTML 文本分割器：
+ *    - 使用 RecursiveCharacterTextSplitter.fromLanguage("html")
+ *    - 专门针对 HTML 内容的智能分割
+ *    - 识别 HTML 标签和结构边界
+ * 
+ * 3. HTML 到文本转换：
+ *    - 使用 HtmlToTextTransformer 转换器
+ *    - 移除 HTML 标签和样式
+ *    - 保留文本内容和基本格式
+ * 
+ * 4. 管道式处理：
+ *    - 使用 pipe 方法连接分割器和转换器
+ *    - 创建文档处理流水线
+ *    - 自动化的多步骤处理
+ * 
+ * 5. 文档转换结果：
+ *    - 生成纯文本的 Document 对象
+ *    - 保留原始元数据（URL、位置等）
+ *    - 移除 HTML 标记但保持可读性
+ * 
+ * 6. 实际应用效果：
+ *    - 将复杂的 HTML 页面转换为清洁的文本
+ *    - 适合后续的文本分析和处理
+ *    - 保持内容的语义结构
+ * 
+ * 使用场景：
+ * - 网页内容的文本提取
+ * - 搜索引擎的内容索引
+ * - 文本分析和挖掘
+ * - 内容清理和标准化
+ * - 知识库的文档处理
+ * - 自然语言处理的预处理
+ */
+
 import { HTMLWebBaseLoader } from "@langchain/community/document_loaders/web/html";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { HtmlToTextTransformer } from "@langchain/community/document_transformers/html_to_text";

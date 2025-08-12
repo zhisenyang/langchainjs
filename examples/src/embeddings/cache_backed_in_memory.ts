@@ -1,3 +1,42 @@
+/**
+ * 缓存支持的嵌入模型示例（内存存储）
+ * 
+ * 这个文件演示了如何使用缓存机制来优化嵌入模型的性能，避免重复计算相同文本的向量。
+ * 主要功能：
+ * 
+ * 1. 缓存嵌入配置：
+ *    - 使用 CacheBackedEmbeddings 包装 OpenAI 嵌入模型
+ *    - 配置内存存储作为缓存后端
+ *    - 设置命名空间以区分不同模型的缓存
+ * 
+ * 2. 文档处理流程：
+ *    - 使用 TextLoader 加载文本文件
+ *    - 使用 RecursiveCharacterTextSplitter 分割文档
+ *    - 创建适合向量化的文档块
+ * 
+ * 3. 向量存储构建：
+ *    - 使用 FaissStore 创建向量数据库
+ *    - 第一次创建时计算并缓存所有嵌入向量
+ *    - 后续创建时直接使用缓存的向量
+ * 
+ * 4. 性能优化效果：
+ *    - 首次创建：约 1905ms（需要计算嵌入）
+ *    - 缓存创建：约 8ms（使用缓存向量）
+ *    - 显著提升处理速度
+ * 
+ * 5. 缓存管理：
+ *    - 自动生成基于内容哈希的缓存键
+ *    - 支持缓存键的遍历和管理
+ *    - 内存高效的存储机制
+ * 
+ * 使用场景：
+ * - 大规模文档处理优化
+ * - 重复文本的向量化加速
+ * - 开发和测试环境性能提升
+ * - 成本控制和 API 调用优化
+ * - 实时应用的响应速度优化
+ */
+
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { CacheBackedEmbeddings } from "langchain/embeddings/cache_backed";
 import { InMemoryStore } from "@langchain/core/stores";
