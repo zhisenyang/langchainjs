@@ -5,9 +5,9 @@ import { MemoryVectorStore } from "../../../vectorstores/memory.js";
 import { TimeWeightedVectorStoreRetriever } from "../../../retrievers/time_weighted.js";
 import { GenerativeAgentMemory, GenerativeAgent } from "../index.js";
 
-// This takes a very long time, mostly for illustrative purposes
+// 这个测试需要很长时间，主要用于演示目的
 test.skip(
-  "Test generative agent end-to-end",
+  "测试生成式智能体端到端功能",
   async () => {
     const Simulation = async () => {
       const userName = "USER";
@@ -17,8 +17,8 @@ test.skip(
       });
 
       const createNewMemoryRetriever = async () => {
-        // Create a new, demo in-memory vector store retriever unique to the agent.
-        // Better results can be achieved with a more sophisticatd vector store.
+        // 为智能体创建一个新的、演示用的内存向量存储检索器。
+        // 使用更复杂的向量存储可以获得更好的结果。
         const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
         const retriever = new TimeWeightedVectorStoreRetriever({
           vectorStore,
@@ -28,7 +28,7 @@ test.skip(
         return retriever;
       };
 
-      // Tommie
+      // Tommie 智能体
       const tommiesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
         llm,
         await createNewMemoryRetriever(),
@@ -79,13 +79,13 @@ test.skip(
         agent: GenerativeAgent,
         message: string
       ): Promise<string> => {
-        // Simple wrapper helping the user interact with the agent
+        // 帮助用户与智能体交互的简单包装器
         const newMessage = `${userName} says ${message}`;
         const response = await agent.generateDialogueResponse(newMessage);
         return response[1];
       };
 
-      // Let's have Tommie start going through a day in his life.
+      // 让 Tommie 开始度过他生活中的一天。
       const observations = [
         "Tommie wakes up to the sound of a noisy construction site outside his window.",
         "Tommie gets out of bed and heads to the kitchen to make himself some coffee.",
@@ -117,7 +117,7 @@ test.skip(
         "Tommie feels slightly better after talking to his friend.",
       ];
 
-      // Let's send Tommie on his way. We'll check in on his summary every few observations to watch him evolve
+      // 让 Tommie 开始他的旅程。我们会每隔几个观察检查他的摘要，观察他的演变
       for (let i = 0; i < observations.length; i += 1) {
         const observation = observations[i];
         // @eslint-disable-next-line/@typescript-eslint/ban-ts-comment
@@ -176,7 +176,7 @@ test.skip(
         Tommie feels slightly better after talking to his friend.  Tommie REACT: Tommie gives a small smile of appreciation to his friend, feeling grateful for the words of encouragement.
       */
 
-      // Interview after the day
+      // 一天结束后的访谈
       // console.log(
       //   await interviewAgent(
       //     tommie,
@@ -210,7 +210,7 @@ test.skip(
         Tommie is a hardworking individual who is looking for new opportunities. Despite feeling tired, he is determined to find the perfect job. He remembers his dog from when he was a kid, is hungry, and is frustrated at times. He shows resilience when searching for his coffee filters, disappointment when checking his email and finding no job offers, and determination when attending the job fair.
       */
 
-      // Let’s add a second character to have a conversation with Tommie. Feel free to configure different traits.
+      // 让我们添加第二个角色与 Tommie 对话。可以随意配置不同的特征。
       const evesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
         llm,
         await createNewMemoryRetriever(),
@@ -257,7 +257,7 @@ test.skip(
         Eve is an attentive listener, helpful colleague, and sociable friend who enjoys playing tennis.
       */
 
-      // Let’s “Interview” Eve before she speaks with Tommie.
+      // 在 Eve 与 Tommie 交谈之前，让我们"访谈" Eve。
       // console.log(
       //   await interviewAgent(eve, "How are you feeling about today?")
       // );
@@ -278,13 +278,13 @@ test.skip(
         Eve said: "I'd really like to get to know more about Tommie's professional background and experience, and why he is looking for a job. And I'd also like to know more about his strengths and passions and what kind of work he would be best suited for. That way I can help him find the right job to fit his needs."
       */
 
-      // Generative agents are much more complex when they interact with a virtual environment or with each other.
-      // Below, we run a simple conversation between Tommie and Eve.
+      // 当生成式智能体与虚拟环境或彼此交互时，它们会变得更加复杂。
+      // 下面，我们运行 Tommie 和 Eve 之间的简单对话。
       const runConversation = async (
         agents: GenerativeAgent[],
         initialObservation: string
       ): Promise<void> => {
-        // Starts the conversation bewteen two agents
+        // 开始两个智能体之间的对话
         const [, observation] = await agents[1].generateReaction(
           initialObservation
         );
@@ -330,7 +330,7 @@ test.skip(
         Next reply: Eve said "You're welcome, Tommie! Don't hesitate to reach out if you have any more questions. Have a great day too!"
       */
 
-      // Since the generative agents retain their memories from the day, we can ask them about their plans, conversations, and other memories.
+      // 由于生成式智能体保留了一天的记忆，我们可以询问他们的计划、对话和其他记忆。
       const tommieSummary: string = await tommie.getSummary({
         forceRefresh: true,
       });

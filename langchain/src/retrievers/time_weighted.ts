@@ -4,8 +4,7 @@ import type { DocumentInterface } from "@langchain/core/documents";
 import { CallbackManagerForRetrieverRun } from "@langchain/core/callbacks/manager";
 
 /**
- * Interface for the fields required to initialize a
- * TimeWeightedVectorStoreRetriever instance.
+ * 初始化 TimeWeightedVectorStoreRetriever 实例所需字段的接口。
  */
 export interface TimeWeightedVectorStoreRetrieverFields
   extends BaseRetrieverInput {
@@ -22,8 +21,8 @@ export const LAST_ACCESSED_AT_KEY = "last_accessed_at";
 export const BUFFER_IDX = "buffer_idx";
 
 /**
- * TimeWeightedVectorStoreRetriever retrieves documents based on their time-weighted relevance.
- * ref: https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/retrievers/time_weighted_retriever.py
+ * TimeWeightedVectorStoreRetriever 基于时间加权相关性检索文档。
+ * 参考: https://github.com/langchain-ai/langchain/blob/master/libs/langchain/langchain/retrievers/time_weighted_retriever.py
  * @example
  * ```typescript
  * const retriever = new TimeWeightedVectorStoreRetriever({
@@ -51,43 +50,43 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * The vectorstore to store documents and determine salience.
+   * 用于存储文档和确定显著性的向量存储。
    */
   private vectorStore: VectorStoreInterface;
 
   /**
-   * The number of top K most relevant documents to consider when searching.
+   * 搜索时考虑的最相关文档的前 K 个数量。
    */
   private searchKwargs: number;
 
   /**
-   * The memory_stream of documents to search through.
+   * 要搜索的文档内存流。
    */
   private memoryStream: DocumentInterface[];
 
   /**
-   * The exponential decay factor used as (1.0-decay_rate)**(hrs_passed).
+   * 指数衰减因子，计算公式为 (1.0-decay_rate)**(hrs_passed)。
    */
   private decayRate: number;
 
   /**
-   * The maximum number of documents to retrieve in a given call.
+   * 单次调用中检索的最大文档数量。
    */
   private k: number;
 
   /**
-   * Other keys in the metadata to factor into the score, e.g. 'importance'.
+   * 元数据中要纳入评分的其他键，例如 'importance'。
    */
   private otherScoreKeys: string[];
 
   /**
-   * The salience to assign memories not retrieved from the vector store.
+   * 分配给未从向量存储中检索到的记忆的显著性。
    */
   private defaultSalience: number | null;
 
   /**
-   * Constructor to initialize the required fields
-   * @param fields - The fields required for initializing the TimeWeightedVectorStoreRetriever
+   * 构造函数，用于初始化必需的字段
+   * @param fields - 初始化 TimeWeightedVectorStoreRetriever 所需的字段
    */
   constructor(fields: TimeWeightedVectorStoreRetrieverFields) {
     super(fields);
@@ -101,25 +100,25 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Get the memory stream of documents.
-   * @returns The memory stream of documents.
+   * 获取文档的内存流。
+   * @returns 文档的内存流。
    */
   getMemoryStream(): DocumentInterface[] {
     return this.memoryStream;
   }
 
   /**
-   * Set the memory stream of documents.
-   * @param memoryStream The new memory stream of documents.
+   * 设置文档的内存流。
+   * @param memoryStream 新的文档内存流。
    */
   setMemoryStream(memoryStream: DocumentInterface[]) {
     this.memoryStream = memoryStream;
   }
 
   /**
-   * Get relevant documents based on time-weighted relevance
-   * @param query - The query to search for
-   * @returns The relevant documents
+   * 基于时间加权相关性获取相关文档
+   * @param query - 要搜索的查询
+   * @returns 相关文档
    */
   async _getRelevantDocuments(
     query: string,
@@ -138,12 +137,11 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * NOTE: When adding documents to a vector store, use addDocuments
-   * via retriever instead of directly to the vector store.
-   * This is because it is necessary to process the document
-   * in prepareDocuments.
+   * 注意：向向量存储添加文档时，请通过检索器使用 addDocuments
+   * 而不是直接添加到向量存储。
+   * 这是因为需要在 prepareDocuments 中处理文档。
    *
-   * @param docs - The documents to add to vector store in the retriever
+   * @param docs - 要添加到检索器中向量存储的文档
    */
   async addDocuments(docs: DocumentInterface[]): Promise<void> {
     const now = Math.floor(Date.now() / 1000);
@@ -154,8 +152,8 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Get memory documents and their scores
-   * @returns An object containing memory documents and their scores
+   * 获取内存文档及其评分
+   * @returns 包含内存文档及其评分的对象
    */
   private getMemoryDocsAndScores(): Record<
     number,
@@ -181,9 +179,9 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Get salient documents and their scores based on the query
-   * @param query - The query to search for
-   * @returns An object containing salient documents and their scores
+   * 基于查询获取显著文档及其评分
+   * @param query - 要搜索的查询
+   * @returns 包含显著文档及其评分的对象
    */
   private async getSalientDocuments(
     query: string,
@@ -212,10 +210,10 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Compute the final result set of documents based on the combined scores
-   * @param docsAndScores - An object containing documents and their scores
-   * @param now - The current timestamp
-   * @returns The final set of documents
+   * 基于综合评分计算最终的文档结果集
+   * @param docsAndScores - 包含文档及其评分的对象
+   * @param now - 当前时间戳
+   * @returns 最终的文档集合
    */
   private computeResults(
     docsAndScores: Record<number, { doc: DocumentInterface; score: number }>,
@@ -241,10 +239,10 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Prepare documents with necessary metadata before saving
-   * @param docs - The documents to prepare
-   * @param now - The current timestamp
-   * @returns The prepared documents
+   * 在保存前为文档准备必要的元数据
+   * @param docs - 要准备的文档
+   * @param now - 当前时间戳
+   * @returns 准备好的文档
    */
   private prepareDocuments(
     docs: DocumentInterface[],
@@ -262,11 +260,11 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Calculate the combined score based on vector relevance and other factors
-   * @param doc - The document to calculate the score for
-   * @param vectorRelevance - The relevance score from the vector store
-   * @param nowMsec - The current timestamp in milliseconds
-   * @returns The combined score for the document
+   * 基于向量相关性和其他因素计算综合评分
+   * @param doc - 要计算评分的文档
+   * @param vectorRelevance - 来自向量存储的相关性评分
+   * @param nowMsec - 当前时间戳（毫秒）
+   * @returns 文档的综合评分
    */
   private getCombinedScore(
     doc: DocumentInterface,
@@ -288,10 +286,10 @@ export class TimeWeightedVectorStoreRetriever extends BaseRetriever {
   }
 
   /**
-   * Calculate the hours passed between two time points
-   * @param time - The current time in seconds
-   * @param refTime - The reference time in seconds
-   * @returns The number of hours passed between the two time points
+   * 计算两个时间点之间经过的小时数
+   * @param time - 当前时间（秒）
+   * @param refTime - 参考时间（秒）
+   * @returns 两个时间点之间经过的小时数
    */
   private getHoursPassed(time: number, refTime: number): number {
     return (time - refTime) / 3600;

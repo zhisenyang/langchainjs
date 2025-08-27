@@ -1,34 +1,58 @@
-import { OpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+// import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { TimeWeightedVectorStoreRetriever } from "langchain/retrievers/time_weighted";
 import {
   GenerativeAgentMemory,
   GenerativeAgent,
 } from "langchain/experimental/generative_agents";
+import { QdrantVectorStore } from "@langchain/qdrant";
+import { API_CONFIG } from "./config.js";
 
 const Simulation = async () => {
   const userName = "USER";
-  const llm = new OpenAI({
-    temperature: 0.9,
-    maxTokens: 1500,
+  // const llm = new OpenAI({
+  //   temperature: 0.9,
+  //   maxTokens: 1500,
+  // });
+
+  const llm = new ChatOpenAI({
+    model: API_CONFIG.models.chat,
+    configuration: {
+      apiKey: API_CONFIG.apiKey,
+      baseURL: API_CONFIG.baseURL,
+    },
+  });
+  // 为智能体创建一个新的、演示用的内存向量存储检索器
+  // 使用更复杂的向量存储可以获得更好的结果
+  // const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
+  const vectorStore = await QdrantVectorStore.fromExistingCollection(
+    new OpenAIEmbeddings({
+      model: API_CONFIG.models.embedding,
+      configuration: {
+        apiKey: API_CONFIG.apiKey,
+        baseURL: API_CONFIG.baseURL,
+      },
+    }),
+    {
+      url: "http://10.21.26.122:6333/",
+      collectionName: "test_collection",
+      apiKey: "51ab1bb1-c5f6-4967-86ad-295edca9cc32",
+    }
+  );
+  const retriever = new TimeWeightedVectorStoreRetriever({
+    vectorStore,
+    otherScoreKeys: ["importance"],
+    k: 15,
   });
 
-  const createNewMemoryRetriever = async () => {
-    // 为智能体创建一个新的、演示用的内存向量存储检索器
-    // 使用更复杂的向量存储可以获得更好的结果
-    const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
-    const retriever = new TimeWeightedVectorStoreRetriever({
-      vectorStore,
-      otherScoreKeys: ["importance"],
-      k: 15,
-    });
-    return retriever;
-  };
+  // const createNewMemoryRetriever = async () => {
+  //   return retriever;
+  // };
 
   // 初始化 Tommie
   const tommiesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
     llm,
-    await createNewMemoryRetriever(),
+    retriever,
     { reflectionThreshold: 8 }
   );
 
@@ -59,7 +83,7 @@ const Simulation = async () => {
     "Tommie 试图休息一下。",
   ];
   for (const observation of tommieObservations) {
-    await tommie.addMemory(observation, new Date());
+    await tommie.addMemory(observation, new Date(), { userId: 1 });
   }
 
   // 在给 Tommie 一些记忆后再次检查他的摘要
@@ -200,7 +224,7 @@ const Simulation = async () => {
   // 让我们添加第二个角色与 Tommie 对话。请随意配置不同的特质。
   const evesMemory: GenerativeAgentMemory = new GenerativeAgentMemory(
     llm,
-    await createNewMemoryRetriever(),
+    retriever,
     {
       verbose: false,
       reflectionThreshold: 5,
@@ -376,4 +400,7 @@ const runSimulation = async () => {
   }
 };
 
-await runSimulation();
+// 使用立即执行的异步函数来避免顶级await
+(async () => {
+  await runSimulation();
+})().catch(console.error);

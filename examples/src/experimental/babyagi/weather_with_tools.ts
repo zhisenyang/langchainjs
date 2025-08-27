@@ -8,9 +8,9 @@ import { PromptTemplate } from "@langchain/core/prompts";
 import { Tool } from "@langchain/core/tools";
 import { SerpAPI } from "@langchain/community/tools/serpapi";
 
-// First, we create a custom agent which will serve as execution chain.
+// 首先，我们创建一个自定义 agent，它将作为执行链。
 const todoPrompt = PromptTemplate.fromTemplate(
-  "You are a planner who is an expert at coming up with a todo list for a given objective. Come up with a todo list for this objective: {objective}"
+  "你是一名规划者，擅长针对给定目标制定待办事项清单。请为该目标制定一份待办清单：{objective}"
 );
 const tools: Tool[] = [
   new SerpAPI(process.env.SERPAPI_API_KEY, {
@@ -25,7 +25,7 @@ const tools: Tool[] = [
       prompt: todoPrompt,
     }),
     description:
-      "useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list for that objective. Please be very clear what the objective is!",
+      "当你需要制定待办清单时非常有用。输入：需要为其创建待办清单的目标。输出：该目标的待办清单。请务必清楚说明目标！",
   }),
 ];
 const agentExecutor = await initializeAgentExecutorWithOptions(
@@ -34,8 +34,8 @@ const agentExecutor = await initializeAgentExecutorWithOptions(
   {
     agentType: "zero-shot-react-description",
     agentArgs: {
-      prefix: `You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}.`,
-      suffix: `Question: {task}
+      prefix: `你是一个基于以下目标执行单个任务的 AI：{objective}。请考虑这些已完成任务：{context}。`,
+      suffix: `问题：{task}
 {agent_scratchpad}`,
       inputVariables: ["objective", "task", "context", "agent_scratchpad"],
     },
@@ -44,217 +44,217 @@ const agentExecutor = await initializeAgentExecutorWithOptions(
 
 const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
 
-// Then, we create a BabyAGI instance.
+// 然后，我们创建一个 BabyAGI 实例。
 const babyAGI = BabyAGI.fromLLM({
   llm: new OpenAI({ temperature: 0 }),
-  executionChain: agentExecutor, // an agent executor is a chain
+  executionChain: agentExecutor, // 一个 agent executor 本质上就是一条链
   vectorstore: vectorStore,
   maxIterations: 10,
 });
 
 await babyAGI.invoke({
-  objective: "Write a short weather report for SF today",
+  objective: "为今天的旧金山写一份简短的天气报告",
 });
 /*
 
-*****TASK LIST*****
+*****任务清单*****
 
-1: Make a todo list
+1: 制定一份待办清单
 
-*****NEXT TASK*****
+*****下一任务*****
 
-1: Make a todo list
+1: 制定一份待办清单
 
-*****TASK RESULT*****
+*****任务结果*****
 
-Today in San Francisco, the weather is sunny with a temperature of 70 degrees Fahrenheit, light winds, and low humidity. The forecast for the next few days is expected to be similar.
+今天在旧金山，天气晴朗，气温华氏70度，微风，低湿度。预计未来几天天气相近。
 
-*****TASK LIST*****
+*****任务清单*****
 
-2: Find the forecasted temperature for the next few days in San Francisco
-3: Find the forecasted wind speed for the next few days in San Francisco
-4: Find the forecasted humidity for the next few days in San Francisco
-5: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-6: Research the average temperature for San Francisco in the past week
-7: Research the average wind speed for San Francisco in the past week
-8: Research the average humidity for San Francisco in the past week
-9: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week
+2: 查找旧金山未来几天的预报气温
+3: 查找旧金山未来几天的预报风速
+4: 查找旧金山未来几天的预报湿度
+5: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
+6: 调研旧金山过去一周的平均气温
+7: 调研旧金山过去一周的平均风速
+8: 调研旧金山过去一周的平均湿度
+9: 创建一张图表，展示旧金山过去一周的温度、风速与湿度
 
-*****NEXT TASK*****
+*****下一任务*****
 
-2: Find the forecasted temperature for the next few days in San Francisco
+2: 查找旧金山未来几天的预报气温
 
-*****TASK RESULT*****
+*****任务结果*****
 
-The forecasted temperature for the next few days in San Francisco is 63°, 65°, 71°, 73°, and 66°.
+旧金山未来几天的预报气温为 63°、65°、71°、73° 和 66°。
 
-*****TASK LIST*****
+*****任务清单*****
 
-3: Find the forecasted wind speed for the next few days in San Francisco
-4: Find the forecasted humidity for the next few days in San Francisco
-5: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-6: Research the average temperature for San Francisco in the past week
-7: Research the average wind speed for San Francisco in the past week
-8: Research the average humidity for San Francisco in the past week
-9: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week
-10: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature, wind speed, and humidity for San Francisco over the past week
-11: Find the forecasted precipitation for the next few days in San Francisco
-12: Research the average wind direction for San Francisco in the past week
-13: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the past week
-14: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to
+3: 查找旧金山未来几天的预报风速
+4: 查找旧金山未来几天的预报湿度
+5: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
+6: 调研旧金山过去一周的平均气温
+7: 调研旧金山过去一周的平均风速
+8: 调研旧金山过去一周的平均湿度
+9: 创建一张图表，展示旧金山过去一周的温度、风速与湿度
+10: 对比旧金山未来几天的预报温度、风速与湿度和过去一周的平均温度、风速与湿度
+11: 查找旧金山未来几天的降水预报
+12: 调研旧金山过去一周的平均风向
+13: 创建一张图表，展示旧金山过去一周的预报温度、风速与湿度
+14: 对比旧金山未来几天的预报温度、风速与湿度与（缺失）
 
-*****NEXT TASK*****
+*****下一任务*****
 
-3: Find the forecasted wind speed for the next few days in San Francisco
+3: 查找旧金山未来几天的预报风速
 
-*****TASK RESULT*****
+*****任务结果*****
 
-West winds 10 to 20 mph. Gusts up to 35 mph in the evening. Tuesday. Sunny. Highs in the 60s to upper 70s. West winds 5 to 15 mph.
+西风10–20英里/小时，傍晚阵风可达35英里/小时。周二：晴。最高温在60多到70多华氏度。西风5–15英里/小时。
 
-*****TASK LIST*****
+*****任务清单*****
 
-4: Research the average precipitation for San Francisco in the past week
-5: Research the average temperature for San Francisco in the past week
-6: Research the average wind speed for San Francisco in the past week
-7: Research the average humidity for San Francisco in the past week
-8: Research the average wind direction for San Francisco in the past week
-9: Find the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-10: Find the forecasted precipitation for the next few days in San Francisco
-11: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-12: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week
-13: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the past month
-14: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature, wind speed, and humidity for San Francisco over the past week
-15: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the
+4: 调研旧金山过去一周的平均降水
+5: 调研旧金山过去一周的平均气温
+6: 调研旧金山过去一周的平均风速
+7: 调研旧金山过去一周的平均湿度
+8: 调研旧金山过去一周的平均风向
+9: 查找旧金山未来几天的预报温度、风速与湿度
+10: 查找旧金山未来几天的降水预报
+11: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
+12: 创建一张图表，展示旧金山过去一周的温度、风速与湿度
+13: 创建一张图表，展示旧金山过去一个月的预报温度、风速与湿度
+14: 对比旧金山未来几天的预报温度、风速与湿度与过去一周的平均温度、风速与湿度
+15: 对比旧金山未来几天的预报温度、风速与湿度与（缺失）
 
-*****NEXT TASK*****
+*****下一任务*****
 
-4: Research the average precipitation for San Francisco in the past week
+4: 调研旧金山过去一周的平均降水
 
-*****TASK RESULT*****
+*****任务结果*****
 
-According to Weather Underground, the forecasted precipitation for San Francisco in the next few days is 7-hour rain and snow with 24-hour rain accumulation.
+根据 Weather Underground，旧金山未来几天的降水预报包含 7 小时的雨雪以及 24 小时的降雨累积。
 
-*****TASK LIST*****
+*****任务清单*****
 
-5: Research the average wind speed for San Francisco over the past month
-6: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the past month
-7: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature, wind speed, and humidity for San Francisco over the past month
-8: Research the average temperature for San Francisco over the past month
-9: Research the average wind direction for San Francisco over the past month
-10: Create a graph showing the forecasted precipitation for San Francisco over the next few days
-11: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past week
-12: Find the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-13: Find the forecasted precipitation for the next few days in San Francisco
-14: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week
-15: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-16: Compare the forecast
+5: 调研旧金山过去一个月的平均风速
+6: 创建一张图表，展示旧金山过去一个月的预报温度、风速与湿度
+7: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均温度、风速与湿度
+8: 调研旧金山过去一个月的平均气温
+9: 调研旧金山过去一个月的平均风向
+10: 创建一张图表，展示旧金山未来几天的降水预报
+11: 对比旧金山未来几天的降水预报与过去一周的平均降水
+12: 查找旧金山未来几天的预报温度、风速与湿度
+13: 查找旧金山未来几天的降水预报
+14: 创建一张图表，展示旧金山过去一周的温度、风速与湿度
+15: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
+16: 对比（缺失）
 
-*****NEXT TASK*****
+*****下一任务*****
 
-5: Research the average wind speed for San Francisco over the past month
+5: 调研旧金山过去一个月的平均风速
 
-*****TASK RESULT*****
+*****任务结果*****
 
-The average wind speed for San Francisco over the past month is 3.2 meters per second.
+旧金山过去一个月的平均风速为 3.2 米/秒。
 
-*****TASK LIST*****
+*****任务清单*****
 
-6: Find the forecasted temperature, wind speed, and humidity for San Francisco over the next few days,
-7: Find the forecasted precipitation for the next few days in San Francisco,
-8: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week,
-9: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days,
-10: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average wind speed for San Francisco over the past month,
-11: Research the average wind speed for San Francisco over the past week,
-12: Create a graph showing the forecasted precipitation for San Francisco over the next few days,
-13: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past month,
-14: Research the average temperature for San Francisco over the past month,
-15: Research the average humidity for San Francisco over the past month,
-16: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature,
+6: 查找旧金山未来几天的预报温度、风速与湿度，
+7: 查找旧金山未来几天的降水预报，
+8: 创建一张图表，展示旧金山过去一周的温度、风速与湿度，
+9: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度，
+10: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均风速，
+11: 调研旧金山过去一周的平均风速，
+12: 创建一张图表，展示旧金山未来几天的降水预报，
+13: 对比旧金山未来几天的降水预报与过去一个月的平均降水，
+14: 调研旧金山过去一个月的平均气温，
+15: 调研旧金山过去一个月的平均湿度，
+16: 将旧金山未来几天的预报温度、风速与湿度与平均温度进行比较，
 
-*****NEXT TASK*****
+*****下一任务*****
 
-6: Find the forecasted temperature, wind speed, and humidity for San Francisco over the next few days,
+6: 查找旧金山未来几天的预报温度、风速与湿度，
 
-*****TASK RESULT*****
+*****任务结果*****
 
-The forecast for San Francisco over the next few days is mostly sunny, with a high near 64. West wind 7 to 12 mph increasing to 13 to 18 mph in the afternoon. Winds could gust as high as 22 mph. Humidity will be around 50%.
+旧金山未来几天的天气以晴为主，最高气温约 64。西风 7–12 英里/小时，下午增至 13–18 英里/小时，阵风最高可达 22 英里/小时。湿度约 50%。
 
-*****TASK LIST*****
+*****任务清单*****
 
-7: Find the forecasted precipitation for the next few days in San Francisco,
-8: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week,
-9: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days,
-10: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average wind speed for San Francisco over the past month,
-11: Research the average wind speed for San Francisco over the past week,
-12: Create a graph showing the forecasted precipitation for San Francisco over the next few days,
-13: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past month,
-14: Research the average temperature for San Francisco over the past month,
-15: Research the average humidity for San Francisco over the past month,
-16: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature
+7: 查找旧金山未来几天的降水预报，
+8: 创建一张图表，展示旧金山过去一周的温度、风速与湿度，
+9: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度，
+10: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均风速，
+11: 调研旧金山过去一周的平均风速，
+12: 创建一张图表，展示旧金山未来几天的降水预报，
+13: 对比旧金山未来几天的降水预报与过去一个月的平均降水，
+14: 调研旧金山过去一个月的平均气温，
+15: 调研旧金山过去一个月的平均湿度，
+16: 将旧金山未来几天的预报温度、风速与湿度与平均温度进行比较
 
-*****NEXT TASK*****
+*****下一任务*****
 
-7: Find the forecasted precipitation for the next few days in San Francisco,
+7: 查找旧金山未来几天的降水预报，
 
-*****TASK RESULT*****
+*****任务结果*****
 
-According to Weather Underground, the forecasted precipitation for the next few days in San Francisco is 7-hour rain and snow with 24-hour rain accumulation, radar and satellite maps of precipitation.
+根据 Weather Underground，旧金山未来几天的降水预报包括 7 小时的雨雪与 24 小时降雨累积，并提供降水的雷达与卫星图。
 
-*****TASK LIST*****
+*****任务清单*****
 
-8: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week,
-9: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days,
-10: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average wind speed for San Francisco over the past month,
-11: Research the average wind speed for San Francisco over the past week,
-12: Create a graph showing the forecasted precipitation for San Francisco over the next few days,
-13: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past month,
-14: Research the average temperature for San Francisco over the past month,
-15: Research the average humidity for San Francisco over the past month,
-16: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature
+8: 创建一张图表，展示旧金山过去一周的温度、风速与湿度，
+9: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度，
+10: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均风速，
+11: 调研旧金山过去一周的平均风速，
+12: 创建一张图表，展示旧金山未来几天的降水预报，
+13: 对比旧金山未来几天的降水预报与过去一个月的平均降水，
+14: 调研旧金山过去一个月的平均气温，
+15: 调研旧金山过去一个月的平均湿度，
+16: 将旧金山未来几天的预报温度、风速与湿度与平均温度进行比较
 
-*****NEXT TASK*****
+*****下一任务*****
 
-8: Create a graph showing the temperature, wind speed, and humidity for San Francisco over the past week,
+8: 创建一张图表，展示旧金山过去一周的温度、风速与湿度，
 
-*****TASK RESULT*****
+*****任务结果*****
 
-A graph showing the temperature, wind speed, and humidity for San Francisco over the past week.
+一张展示旧金山过去一周温度、风速与湿度的图表。
 
-*****TASK LIST*****
+*****任务清单*****
 
-9: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
-10: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average wind speed for San Francisco over the past month
-11: Research the average wind speed for San Francisco over the past week
-12: Create a graph showing the forecasted precipitation for San Francisco over the next few days
-13: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past month
-14: Research the average temperature for San Francisco over the past month
-15: Research the average humidity for San Francisco over the past month
-16: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average temperature
+9: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
+10: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均风速
+11: 调研旧金山过去一周的平均风速
+12: 创建一张图表，展示旧金山未来几天的降水预报
+13: 对比旧金山未来几天的降水预报与过去一个月的平均降水
+14: 调研旧金山过去一个月的平均气温
+15: 调研旧金山过去一个月的平均湿度
+16: 将旧金山未来几天的预报温度、风速与湿度与平均温度进行比较
 
-*****NEXT TASK*****
+*****下一任务*****
 
-9: Create a graph showing the forecasted temperature, wind speed, and humidity for San Francisco over the next few days
+9: 创建一张图表，展示旧金山未来几天的预报温度、风速与湿度
 
-*****TASK RESULT*****
+*****任务结果*****
 
-The forecasted temperature, wind speed, and humidity for San Francisco over the next few days can be seen in the graph created.
+已创建的图表展示了旧金山未来几天的预报温度、风速与湿度。
 
-*****TASK LIST*****
+*****任务清单*****
 
-10: Research the average wind speed for San Francisco over the past month
-11: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average humidity for San Francisco over the past month
-12: Create a graph showing the forecasted precipitation for San Francisco over the next few days
-13: Compare the forecasted precipitation for San Francisco over the next few days to the average precipitation for San Francisco over the past month
-14: Research the average temperature for San Francisco over the past week
-15: Compare the forecasted temperature, wind speed, and humidity for San Francisco over the next few days to the average wind speed for San Francisco over the past week
+10: 调研旧金山过去一个月的平均风速
+11: 对比旧金山未来几天的预报温度、风速与湿度与过去一个月的平均湿度
+12: 创建一张图表，展示旧金山未来几天的降水预报
+13: 对比旧金山未来几天的降水预报与过去一个月的平均降水
+14: 调研旧金山过去一周的平均气温
+15: 对比旧金山未来几天的预报温度、风速与湿度与过去一周的平均风速
 
-*****NEXT TASK*****
+*****下一任务*****
 
-10: Research the average wind speed for San Francisco over the past month
+10: 调研旧金山过去一个月的平均风速
 
-*****TASK RESULT*****
+*****任务结果*****
 
-The average wind speed for San Francisco over the past month is 2.7 meters per second.
+旧金山过去一个月的平均风速为 2.7 米/秒。
 
 [...]
 */

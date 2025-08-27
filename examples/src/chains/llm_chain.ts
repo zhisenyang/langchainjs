@@ -40,7 +40,7 @@
 import { OpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 
-// We can construct an LLMChain from a PromptTemplate and an LLM.
+// 我们可以从 PromptTemplate 和 LLM 构建一个 LLMChain。
 const model = new OpenAI({ temperature: 0 });
 const prompt = PromptTemplate.fromTemplate(
   "What is a good name for a company that makes {product}?"
@@ -48,7 +48,7 @@ const prompt = PromptTemplate.fromTemplate(
 
 const chainA = prompt.pipe({ llm: model });
 
-// The result is an object with a `text` property.
+// 结果是一个包含 `text` 属性的对象。
 const resA = await chainA.invoke({ product: "colorful socks" });
 console.log({ resA });
 // { resA: { text: '\n\nSocktastic!' } }

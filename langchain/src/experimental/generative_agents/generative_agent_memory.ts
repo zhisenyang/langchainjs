@@ -19,11 +19,10 @@ export type GenerativeAgentMemoryConfig = {
 };
 
 /**
- * Class that manages the memory of a generative agent in LangChain. It
- * extends the `BaseChain` class and has methods for adding observations
- * or memories to the agent's memory, scoring the importance of a memory,
- * reflecting on recent events to add synthesized memories, and generating
- * insights on a topic of reflection based on pertinent memories.
+ * 管理 LangChain 中生成式智能体记忆的类。它
+ * 继承自 `BaseChain` 类，具有向智能体记忆中添加观察
+ * 或记忆、评估记忆重要性、反思最近事件以添加合成记忆，
+ * 以及基于相关记忆生成反思主题洞察的方法。
  */
 class GenerativeAgentMemoryChain extends BaseChain {
   static lc_name() {
@@ -70,9 +69,9 @@ class GenerativeAgentMemoryChain extends BaseChain {
   }
 
   /**
-   * Method that creates a new LLMChain with the given prompt.
-   * @param prompt The PromptTemplate to use for the new LLMChain.
-   * @returns A new LLMChain instance.
+   * 使用给定提示创建新 LLMChain 的方法。
+   * @param prompt 用于新 LLMChain 的 PromptTemplate。
+   * @returns 新的 LLMChain 实例。
    */
   chain(prompt: PromptTemplate): LLMChain {
     const chain = new LLMChain({
@@ -86,7 +85,7 @@ class GenerativeAgentMemoryChain extends BaseChain {
 
   async _call(values: ChainValues, runManager?: CallbackManagerForChainRun) {
     const { memory_content: memoryContent, now } = values;
-    // add an observation or memory to the agent's memory
+    // 向智能体的记忆中添加观察或记忆
     const importanceScore = await this.scoreMemoryImportance(
       memoryContent,
       runManager
@@ -100,9 +99,9 @@ class GenerativeAgentMemoryChain extends BaseChain {
       },
     });
     await this.memoryRetriever.addDocuments([document]);
-    // after an agent has processed a certain amount of memories (as measured by aggregate importance),
-    // it is time to pause and reflect on recent events to add more synthesized memories to the agent's
-    // memory stream.
+    // 当智能体处理了一定数量的记忆后（通过累积重要性衡量），
+    // 是时候暂停并反思最近的事件，以向智能体的
+    // 记忆流中添加更多合成记忆。
     if (
       this.reflectionThreshold !== undefined &&
       this.aggregateImportance > this.reflectionThreshold &&
@@ -118,11 +117,11 @@ class GenerativeAgentMemoryChain extends BaseChain {
   }
 
   /**
-   * Method that pauses the agent to reflect on recent events and generate
-   * new insights.
-   * @param now The current date.
-   * @param runManager The CallbackManagerForChainRun to use for the reflection.
-   * @returns An array of new insights as strings.
+   * 暂停智能体以反思最近事件并生成
+   * 新洞察的方法。
+   * @param now 当前日期。
+   * @param runManager 用于反思的 CallbackManagerForChainRun。
+   * @returns 作为字符串的新洞察数组。
    */
   async pauseToReflect(
     now?: Date,
@@ -136,7 +135,7 @@ class GenerativeAgentMemoryChain extends BaseChain {
     for (const topic of topics) {
       const insights = await this.getInsightsOnTopic(topic, now, runManager);
       for (const insight of insights) {
-        // add memory
+        // 添加记忆
         await this.call(
           {
             memory_content: insight,
@@ -154,16 +153,16 @@ class GenerativeAgentMemoryChain extends BaseChain {
   }
 
   /**
-   * Method that scores the importance of a given memory.
-   * @param memoryContent The content of the memory to score.
-   * @param runManager The CallbackManagerForChainRun to use for scoring.
-   * @returns The importance score of the memory as a number.
+   * 评估给定记忆重要性的方法。
+   * @param memoryContent 要评分的记忆内容。
+   * @param runManager 用于评分的 CallbackManagerForChainRun。
+   * @returns 记忆的重要性分数（数字）。
    */
   async scoreMemoryImportance(
     memoryContent: string,
     runManager?: CallbackManagerForChainRun
   ): Promise<number> {
-    // score the absolute importance of a given memory
+    // 评估给定记忆的绝对重要性
     const prompt = PromptTemplate.fromTemplate(
       "On the scale of 1 to 10, where 1 is purely mundane" +
         " (e.g., brushing teeth, making bed) and 10 is" +
@@ -194,11 +193,16 @@ class GenerativeAgentMemoryChain extends BaseChain {
   }
 
   /**
-   * Method that retrieves the topics of reflection based on the last K
-   * memories.
-   * @param lastK The number of most recent memories to consider for generating topics.
-   * @param runManager The CallbackManagerForChainRun to use for retrieving topics.
-   * @returns An array of topics of reflection as strings.
+   * 基于最后 K 个记忆检索反思主题的方法。
+   * @param lastK 用于生成主题的最近记忆数量。
+   * @param runManager 用于检索主题的 CallbackManagerForChainRun。
+   * @returns 作为字符串的反思主题数组。
+   */
+  /**
+   * 获取反思主题的方法。
+   * @param lastK 要考虑的最近记忆数量。
+   * @param runManager 用于获取反思主题的 CallbackManagerForChainRun。
+   * @returns 反思主题字符串数组。
    */
   async getTopicsOfReflection(
     lastK: number,
@@ -223,19 +227,18 @@ class GenerativeAgentMemoryChain extends BaseChain {
   }
 
   /**
-   * Method that generates insights on a given topic of reflection based on
-   * pertinent memories.
-   * @param topic The topic of reflection.
-   * @param now The current date.
-   * @param runManager The CallbackManagerForChainRun to use for generating insights.
-   * @returns An array of insights as strings.
+   * 基于相关记忆生成给定反思主题洞察的方法。
+   * @param topic 反思主题。
+   * @param now 当前日期。
+   * @param runManager 用于生成洞察的 CallbackManagerForChainRun。
+   * @returns 作为字符串的洞察数组。
    */
   async getInsightsOnTopic(
     topic: string,
     now?: Date,
     runManager?: CallbackManagerForChainRun
   ): Promise<string[]> {
-    // generate insights on a topic of reflection, based on pertinent memories
+    // 基于相关记忆生成反思主题的洞察
     const prompt = PromptTemplate.fromTemplate(
       "Statements about {topic}\n" +
         "{related_statements}\n\n" +
@@ -254,26 +257,26 @@ class GenerativeAgentMemoryChain extends BaseChain {
       },
       runManager?.getChild("reflection_insights")
     );
-    return GenerativeAgentMemoryChain.parseList(result.output); // added output
+    return GenerativeAgentMemoryChain.parseList(result.output); // 添加了 output
   }
 
   /**
-   * Method that parses a newline-separated string into a list of strings.
-   * @param text The newline-separated string to parse.
-   * @returns An array of strings.
+   * 将换行符分隔的字符串解析为字符串列表的方法。
+   * @param text 要解析的换行符分隔字符串。
+   * @returns 字符串数组。
    */
   static parseList(text: string): string[] {
-    // parse a newine seperates string into a list of strings
+    // 将换行符分隔的字符串解析为字符串列表
     return text.split("\n").map((s) => s.trim());
   }
 
-  // TODO: Mock "now" to simulate different times
+  // TODO: 模拟 "now" 以模拟不同时间
   /**
-   * Method that fetches memories related to a given observation.
-   * @param observation The observation to fetch memories for.
-   * @param _now The current date.
-   * @param runManager The CallbackManagerForChainRun to use for fetching memories.
-   * @returns An array of Document instances representing the fetched memories.
+   * 获取与给定观察相关的记忆的方法。
+   * @param observation 要获取记忆的观察。
+   * @param _now 当前日期。
+   * @param runManager 用于获取记忆的 CallbackManagerForChainRun。
+   * @returns 表示获取的记忆的 Document 实例数组。
    */
   async fetchMemories(
     observation: string,
@@ -288,11 +291,11 @@ class GenerativeAgentMemoryChain extends BaseChain {
 }
 
 /**
- * Class that manages the memory of a generative agent in LangChain. It
- * extends the `BaseMemory` class and has methods for adding a memory,
- * formatting memories, getting memories until a token limit is reached,
- * loading memory variables, saving the context of a model run to memory,
- * and clearing memory contents.
+ * 管理 LangChain 中生成式智能体记忆的类。它
+ * 继承自 `BaseMemory` 类，具有添加记忆、
+ * 格式化记忆、获取记忆直到达到令牌限制、
+ * 加载记忆变量、将模型运行的上下文保存到记忆中
+ * 以及清除记忆内容的方法。
  * @example
  * ```typescript
  * const createNewMemoryRetriever = async () => {
@@ -358,49 +361,49 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that returns the key for relevant memories.
-   * @returns The key for relevant memories as a string.
+   * 返回相关记忆键的方法。
+   * @returns 作为字符串的相关记忆键。
    */
   getRelevantMemoriesKey(): string {
     return this.relevantMemoriesKey;
   }
 
   /**
-   * Method that returns the key for the most recent memories token.
-   * @returns The key for the most recent memories token as a string.
+   * 返回最近记忆令牌键的方法。
+   * @returns 作为字符串的最近记忆令牌键。
    */
   getMostRecentMemoriesTokenKey(): string {
     return this.mostRecentMemoriesTokenKey;
   }
 
   /**
-   * Method that returns the key for adding a memory.
-   * @returns The key for adding a memory as a string.
+   * 返回添加记忆键的方法。
+   * @returns 作为字符串的添加记忆键。
    */
   getAddMemoryKey(): string {
     return this.addMemoryKey;
   }
 
   /**
-   * Method that returns the key for the current time.
-   * @returns The key for the current time as a string.
+   * 返回当前时间键的方法。
+   * @returns 作为字符串的当前时间键。
    */
   getCurrentTimeKey(): string {
     return this.nowKey;
   }
 
   get memoryKeys(): string[] {
-    // Return an array of memory keys
+    // 返回记忆键数组
     return [this.relevantMemoriesKey, this.mostRecentMemoriesKey];
   }
 
   /**
-   * Method that adds a memory to the agent's memory.
-   * @param memoryContent The content of the memory to add.
-   * @param now The current date.
-   * @param metadata The metadata for the memory.
-   * @param callbacks The Callbacks to use for adding the memory.
-   * @returns The result of the memory addition.
+   * 向智能体记忆中添加记忆的方法。
+   * @param memoryContent 要添加的记忆内容。
+   * @param now 当前日期。
+   * @param metadata 记忆的元数据。
+   * @param callbacks 用于添加记忆的回调。
+   * @returns 记忆添加的结果。
    */
   async addMemory(
     memoryContent: string,
@@ -415,9 +418,9 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that formats the given relevant memories in detail.
-   * @param relevantMemories The relevant memories to format.
-   * @returns The formatted memories as a string.
+   * 详细格式化给定相关记忆的方法。
+   * @param relevantMemories 要格式化的相关记忆。
+   * @returns 作为字符串的格式化记忆。
    */
   formatMemoriesDetail(relevantMemories: Document[]): string {
     if (!relevantMemories.length) {
@@ -445,9 +448,9 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that formats the given relevant memories in a simple manner.
-   * @param relevantMemories The relevant memories to format.
-   * @returns The formatted memories as a string.
+   * 以简单方式格式化给定相关记忆的方法。
+   * @param relevantMemories 要格式化的相关记忆。
+   * @returns 作为字符串的格式化记忆。
    */
   formatMemoriesSimple(relevantMemories: Document[]): string {
     const joinedContent = relevantMemories
@@ -457,12 +460,12 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that retrieves memories until a token limit is reached.
-   * @param consumedTokens The number of tokens consumed so far.
-   * @returns The memories as a string.
+   * 检索记忆直到达到令牌限制的方法。
+   * @param consumedTokens 到目前为止消耗的令牌数量。
+   * @returns 作为字符串的记忆。
    */
   async getMemoriesUntilLimit(consumedTokens: number): Promise<string> {
-    // reduce the number of tokens in the documents
+    // 减少文档中的令牌数量
     const result = [];
     for (const doc of this.memoryRetriever
       .getMemoryStream()
@@ -484,14 +487,14 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   get memoryVariables(): string[] {
-    // input keys this memory class will load dynamically
+    // 此记忆类将动态加载的输入键
     return [];
   }
 
   /**
-   * Method that loads memory variables based on the given inputs.
-   * @param inputs The inputs to use for loading memory variables.
-   * @returns An object containing the loaded memory variables.
+   * 基于给定输入加载记忆变量的方法。
+   * @param inputs 用于加载记忆变量的输入。
+   * @returns 包含已加载记忆变量的对象。
    */
   async loadMemoryVariables(
     inputs: InputValues
@@ -524,16 +527,16 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that saves the context of a model run to memory.
-   * @param _inputs The inputs of the model run.
-   * @param outputs The outputs of the model run.
-   * @returns Nothing.
+   * 将模型运行的上下文保存到记忆中的方法。
+   * @param _inputs 模型运行的输入。
+   * @param outputs 模型运行的输出。
+   * @returns 无返回值。
    */
   async saveContext(
     _inputs: InputValues,
     outputs: OutputValues
   ): Promise<void> {
-    // save the context of this model run to memory
+    // 将此模型运行的上下文保存到记忆中
     const mem = outputs[this.addMemoryKey];
     const now = outputs[this.nowKey];
     if (mem) {
@@ -542,10 +545,10 @@ export class GenerativeAgentMemory extends BaseMemory {
   }
 
   /**
-   * Method that clears the memory contents.
-   * @returns Nothing.
+   * 清除记忆内容的方法。
+   * @returns 无返回值。
    */
   clear(): void {
-    // TODO: clear memory contents
+    // TODO: 清除记忆内容
   }
 }

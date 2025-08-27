@@ -10,9 +10,9 @@ import { GenerativeAgentMemory } from "./generative_agent_memory.js";
 import { BaseChain } from "../../chains/base.js";
 
 /**
- * Configuration for the GenerativeAgent class. Defines the character's
- * name, optional age, permanent traits, status, verbosity, and summary
- * refresh seconds.
+ * GenerativeAgent 类的配置。定义角色的
+ * 姓名、可选年龄、永久特征、状态、详细程度和摘要
+ * 刷新秒数。
  */
 export type GenerativeAgentConfig = {
   name: string;
@@ -25,9 +25,9 @@ export type GenerativeAgentConfig = {
 };
 
 /**
- * Implementation of a generative agent that can learn and form new memories over
- * time. It extends the BaseChain class, which is a generic
- * sequence of calls to components, including other chains.
+ * 生成式智能体的实现，能够随着时间学习并形成新的记忆。
+ * 它继承了 BaseChain 类，这是一个通用的
+ * 组件调用序列，包括其他链。
  * @example
  * ```typescript
  * const tommie: GenerativeAgent = new GenerativeAgent(
@@ -64,29 +64,29 @@ export class GenerativeAgent extends BaseChain {
     return "GenerativeAgent";
   }
 
-  // a character with memory and innate characterisitics
-  name: string; // the character's name
+  // 具有记忆和天生特征的角色
+  name: string; // 角色的姓名
 
-  age?: number; // the optional age of the character
+  age?: number; // 角色的可选年龄
 
-  traits: string; // permanent traits to ascribe to the character
+  traits: string; // 赋予角色的永久特征
 
-  status: string; // the traits of the character you wish not to change
+  status: string; // 您希望不改变的角色特征
 
   longTermMemory: GenerativeAgentMemory;
 
-  llm: BaseLanguageModelInterface; // the underlying language model
+  llm: BaseLanguageModelInterface; // 底层语言模型
 
   verbose: boolean; // false
 
-  private summary: string; // stateful self-summary generated via reflection on the character's memory.
+  private summary: string; // 通过反思角色记忆生成的有状态自我摘要。
 
   private summaryRefreshSeconds = 3600;
 
-  private lastRefreshed: Date; // the last time the character's summary was regenerated
+  private lastRefreshed: Date; // 角色摘要最后一次重新生成的时间
 
-  // TODO: Add support for daily summaries
-  // private dailySummaries: string[] = []; // summary of the events in the plan that the agent took.
+  // TODO: 添加对每日摘要的支持
+  // private dailySummaries: string[] = []; // 智能体执行计划中事件的摘要。
 
   _chainType(): string {
     return "generative_agent_executor";
@@ -120,14 +120,14 @@ export class GenerativeAgent extends BaseChain {
     // this.dailySummaries = config.dailySummaries ?? this.dailySummaries;
   }
 
-  // LLM methods
+  // LLM 方法
   /**
-   * Parses a newline-separated string into a list of strings.
-   * @param text The string to parse.
-   * @returns An array of strings parsed from the input text.
+   * 将换行符分隔的字符串解析为字符串列表。
+   * @param text 要解析的字符串。
+   * @returns 从输入文本解析出的字符串数组。
    */
   parseList(text: string): string[] {
-    // parse a newline-seperated string into a list of strings
+    // 将换行符分隔的字符串解析为字符串列表
     const lines: string[] = text.trim().split("\n");
     const result: string[] = lines.map((line: string) =>
       line.replace(/^\s*\d+\.\s*/, "").trim()
@@ -136,27 +136,27 @@ export class GenerativeAgent extends BaseChain {
   }
 
   /**
-   * Creates a new LLMChain with the given prompt and the agent's language
-   * model, verbosity, output key, and memory.
-   * @param prompt The prompt to use for the LLMChain.
-   * @returns A new LLMChain instance.
+   * 使用给定的提示和智能体的语言模型、详细程度、输出键和记忆
+   * 创建一个新的 LLMChain。
+   * @param prompt 用于 LLMChain 的提示。
+   * @returns 新的 LLMChain 实例。
    */
   chain(prompt: PromptTemplate): LLMChain {
     const chain = new LLMChain({
       llm: this.llm,
       prompt,
       verbose: this.verbose,
-      outputKey: "output", // new
+      outputKey: "output", // 新增
       memory: this.longTermMemory,
     });
     return chain;
   }
 
   /**
-   * Extracts the observed entity from the given observation.
-   * @param observation The observation to extract the entity from.
-   * @param runManager Optional CallbackManagerForChainRun instance.
-   * @returns The extracted entity as a string.
+   * 从给定的观察中提取观察到的实体。
+   * @param observation 要从中提取实体的观察。
+   * @param runManager 可选的 CallbackManagerForChainRun 实例。
+   * @returns 提取的实体字符串。
    */
   async getEntityFromObservations(
     observation: string,
@@ -178,11 +178,11 @@ export class GenerativeAgent extends BaseChain {
   }
 
   /**
-   * Extracts the action of the given entity from the given observation.
-   * @param observation The observation to extract the action from.
-   * @param entityName The name of the entity to extract the action for.
-   * @param runManager Optional CallbackManagerForChainRun instance.
-   * @returns The extracted action as a string.
+   * 从给定的观察中提取给定实体的动作。
+   * @param observation 要从中提取动作的观察。
+   * @param entityName 要提取动作的实体名称。
+   * @param runManager 可选的 CallbackManagerForChainRun 实例。
+   * @returns 提取的动作字符串。
    */
   async getEntityAction(
     observation: string,
@@ -206,16 +206,16 @@ export class GenerativeAgent extends BaseChain {
   }
 
   /**
-   * Summarizes memories that are most relevant to an observation.
-   * @param observation The observation to summarize related memories for.
-   * @param runManager Optional CallbackManagerForChainRun instance.
-   * @returns The summarized memories as a string.
+   * 总结与观察最相关的记忆。
+   * @param observation 要为其总结相关记忆的观察。
+   * @param runManager 可选的 CallbackManagerForChainRun 实例。
+   * @returns 总结的记忆字符串。
    */
   async summarizeRelatedMemories(
     observation: string,
     runManager?: CallbackManagerForChainRun
   ): Promise<string> {
-    // summarize memories that are most relevant to an observation
+    // 总结与观察最相关的记忆
     const prompt = PromptTemplate.fromTemplate(
       `
 {q1}?
@@ -242,7 +242,7 @@ Relevant context:`
       runManager?.getChild("entity_relationships")
     );
 
-    return response.output.trim(); // added output
+    return response.output.trim(); // 添加了输出
   }
 
   async _call(
@@ -250,7 +250,7 @@ Relevant context:`
     runManager?: CallbackManagerForChainRun
   ): Promise<ChainValues> {
     const { observation, suffix, now } = values;
-    // react to a given observation or dialogue act
+    // 对给定的观察或对话行为做出反应
     const prompt = PromptTemplate.fromTemplate(
       `{agent_summary_description}` +
         `\nIt is {current_time}.` +
@@ -262,7 +262,7 @@ Relevant context:`
         `\n\n${suffix}`
     );
 
-    const agentSummaryDescription = await this.getSummary({}, runManager); // now = now in param
+    const agentSummaryDescription = await this.getSummary({}, runManager); // now = 参数中的 now
     const relevantMemoriesStr = await this.summarizeRelatedMemories(
       observation,
       runManager
@@ -348,10 +348,10 @@ Relevant context:`
   }
 
   /**
-   * Generates a reaction to the given observation.
-   * @param observation The observation to generate a reaction for.
-   * @param now Optional current date.
-   * @returns A boolean indicating whether to continue the dialogue and the output string.
+   * 对给定的观察生成反应。
+   * @param observation 要为其生成反应的观察。
+   * @param now 可选的当前日期。
+   * @returns 指示是否继续对话的布尔值和输出字符串。
    */
   async generateReaction(
     observation: string,
@@ -373,10 +373,10 @@ Relevant context:`
   }
 
   /**
-   * Generates a dialogue response to the given observation.
-   * @param observation The observation to generate a dialogue response for.
-   * @param now Optional current date.
-   * @returns A boolean indicating whether to continue the dialogue and the output string.
+   * 对给定的观察生成对话响应。
+   * @param observation 要为其生成对话响应的观察。
+   * @param now 可选的当前日期。
+   * @returns 指示是否继续对话的布尔值和输出字符串。
    */
   async generateDialogueResponse(
     observation: string,
@@ -391,17 +391,17 @@ Relevant context:`
     return [continue_dialogue, output];
   }
 
-  // Agent stateful' summary methods
-  // Each dialog or response prompt includes a header
-  // summarizing the agent's self-description. This is
-  // updated periodically through probing it's memories
+  // 智能体有状态的摘要方法
+  // 每个对话或响应提示都包含一个标题
+  // 总结智能体的自我描述。这通过
+  // 定期探测其记忆来更新
   /**
-   * Gets the agent's summary, which includes the agent's name, age, traits,
-   * and a summary of the agent's core characteristics. The summary is
-   * updated periodically through probing the agent's memories.
-   * @param config Optional configuration object with current date and a boolean to force refresh.
-   * @param runManager Optional CallbackManagerForChainRun instance.
-   * @returns The agent's summary as a string.
+   * 获取智能体的摘要，包括智能体的姓名、年龄、特征
+   * 和智能体核心特征的摘要。摘要通过
+   * 定期探测智能体的记忆来更新。
+   * @param config 可选的配置对象，包含当前日期和强制刷新的布尔值。
+   * @param runManager 可选的 CallbackManagerForChainRun 实例。
+   * @returns 智能体的摘要字符串。
    */
   async getSummary(
     config?: {
@@ -438,10 +438,10 @@ ${this.summary}`;
   }
 
   /**
-   * Computes the agent's summary by summarizing the agent's core
-   * characteristics given the agent's relevant memories.
-   * @param runManager Optional CallbackManagerForChainRun instance.
-   * @returns The computed summary as a string.
+   * 通过总结智能体的核心特征来计算智能体的摘要，
+   * 基于智能体的相关记忆。
+   * @param runManager 可选的 CallbackManagerForChainRun 实例。
+   * @returns 计算出的摘要字符串。
    */
   async computeAgentSummary(
     runManager?: CallbackManagerForChainRun
@@ -454,7 +454,7 @@ ${this.summary}`;
         "Do not embellish." +
         "\n\nSummary: "
     );
-    // the agent seeks to think about their core characterisitics
+    // 智能体试图思考其核心特征
     const result = await this.chain(prompt).call(
       {
         name: this.name,
@@ -466,9 +466,9 @@ ${this.summary}`;
   }
 
   /**
-   * Returns a full header of the agent's status, summary, and current time.
-   * @param config Optional configuration object with current date and a boolean to force refresh.
-   * @returns The full header as a string.
+   * 返回智能体状态、摘要和当前时间的完整标题。
+   * @param config 可选的配置对象，包含当前日期和强制刷新的布尔值。
+   * @returns 完整标题字符串。
    */
   getFullHeader(
     config: {
@@ -477,7 +477,7 @@ ${this.summary}`;
     } = {}
   ): string {
     const { now = new Date(), forceRefresh = false } = config;
-    // return a full header of the agent's status, summary, and current time.
+    // 返回智能体状态、摘要和当前时间的完整标题。
     const summary = this.getSummary({ now, forceRefresh });
     const currentTimeString = now.toLocaleString("en-US", {
       month: "long",
@@ -491,12 +491,12 @@ ${this.summary}`;
   }
 
   /**
-   * Adds a memory to the agent's long-term memory.
-   * @param memoryContent The content of the memory to add.
-   * @param now Optional current date.
-   * @param metadata Optional metadata for the memory.
-   * @param callbacks Optional Callbacks instance.
-   * @returns The result of adding the memory to the agent's long-term memory.
+   * 向智能体的长期记忆中添加记忆。
+   * @param memoryContent 要添加的记忆内容。
+   * @param now 可选的当前日期。
+   * @param metadata 记忆的可选元数据。
+   * @param callbacks 可选的 Callbacks 实例。
+   * @returns 向智能体长期记忆添加记忆的结果。
    */
   async addMemory(
     memoryContent: string,
