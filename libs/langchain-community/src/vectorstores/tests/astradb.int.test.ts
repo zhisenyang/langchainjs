@@ -1,4 +1,3 @@
-/* eslint-disable no-process-env */
 import { describe, expect, test } from "@jest/globals";
 import { DataAPIClient, Db } from "@datastax/astra-db-ts";
 import { faker } from "@faker-js/faker";
@@ -14,7 +13,7 @@ describe.skip("AstraDBVectorStore", () => {
     const clientConfig = {
       token: process.env.ASTRA_DB_APPLICATION_TOKEN ?? "dummy",
       endpoint: process.env.ASTRA_DB_ENDPOINT ?? "dummy",
-      namespace: process.env.ASTRA_DB_NAMESPACE ?? "default_keyspace",
+      keyspace: process.env.ASTRA_DB_KEYSPACE ?? "default_keyspace",
     };
 
     const dataAPIClient = new DataAPIClient(clientConfig.token);

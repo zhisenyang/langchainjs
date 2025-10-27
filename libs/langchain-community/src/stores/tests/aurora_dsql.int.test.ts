@@ -1,6 +1,3 @@
-/* eslint-disable no-process-env */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import pg from "pg";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { DsqlSigner } from "@aws-sdk/dsql-signer";
@@ -15,7 +12,7 @@ async function getAdminAuthToken() {
     credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      // sessionToken: process.env.AWS_SESSION_TOKEN!
+      // sessionToken: process.env.AWS_SESSION_TOKEN!,
     },
   });
   return await signer.getDbConnectAdminAuthToken();
